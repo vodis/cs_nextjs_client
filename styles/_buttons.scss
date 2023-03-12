@@ -1,0 +1,153 @@
+@import './variables';
+@import './breakpoints';
+
+$className: btn;
+
+@mixin _colors($colors) {
+    color: if(map-get($colors, textColor), var(map-get($colors, textColor)), null);
+    background: if(map-get($colors, backgroundColor), var(map-get($colors, backgroundColor)), null);
+    border-color: if(map-get($colors, borderColor), map-get($colors, borderColor), null);
+    box-shadow: if(map-get($colors, boxShadow), map-get($colors, boxShadow), null);
+}
+
+@mixin buttonColors($base, $hover: (), $active: (), $disabled) {
+    @include _colors($base);
+
+    &:not(:disabled), &:not(.disabled), &:not(.#{$className}-disabled) {
+        @if length(map-keys($hover)) > 0 {
+            &:hover {
+                @include _colors($hover);
+            }
+        }
+
+        @if length(map-keys($active)) > 0 {
+            &:active {
+                @include _colors($active);
+            }
+        }
+    }
+
+    &:disabled, &.disabled, &#{$className}-disabled {
+        @include _colors($disabled);
+    }
+}
+
+.#{$className} {
+    display: inline-flex;
+    font-family: $base-font-family;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 90%;
+    letter-spacing: 0.01em;
+    background-color: transparent;
+    text-transform: lowercase;
+    border: 0 none;
+    outline: 0 none;
+    text-decoration: none;
+    box-sizing: border-box;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    justify-content: center;
+    align-items: center;
+
+    &:disabled, &.disabled, &.#{$className}-disabled {
+        pointer-events: none;
+    }
+}
+
+// outlined
+.#{$className}-outlined {
+    height: 4rem;
+    padding: 1.35rem 2.6rem;
+    border-radius: 4.5rem;
+
+    @include buttonColors(
+        $base: (textColor: --dein-btn-outlined-color, boxShadow: inset 0 0 0 1px var(--dein-btn-outlined-color)),
+        $hover: (backgroundColor: --dein-btn-outlined-hover-bg, boxShadow: inset 0 0 0 1px var(--dein-btn-outlined-hover-bg)),
+        $disabled: (textColor: --dein-btn-outlined-disabled-bg, boxShadow: inset 0 0 0 1px var(--dein-btn-outlined-disabled-bg)),
+    );
+}
+
+// filled
+.#{$className}-filled {
+    height: 4rem;
+    padding: 1.15rem 2.6rem 1.35rem;
+    border-radius: 4.5rem;
+
+    @include buttonColors(
+        $base: (textColor: --dein-btn-filled-color, backgroundColor: --dein-btn-filled-bg),
+        $hover: (backgroundColor: --dein-btn-filled-hover-bg),
+        $disabled: (textColor: --dein-btn-filled-disabled-color, backgroundColor: --dein-btn-filled-disabled-bg),
+    );
+
+    &.#{$className}-color-gray {
+        @include buttonColors(
+            $base: (textColor: --dein-btn-filled-primary-color, backgroundColor: --dein-btn-filled-primary-gray-bg),
+            $hover: (textColor: --dein-btn-filled-primary-color, backgroundColor: --dein-btn-filled-primary-gray-bg),
+            $active: (textColor: --dein-btn-filled-primary-active-color, backgroundColor: --dein-btn-filled-primary-active-bg),
+            $disabled: (textColor: --dein-btn-filled-primary-disabled-color, backgroundColor: --dein-btn-filled-primary-disabled-bg),
+        );
+    }
+
+    &.#{$className}-color-gold {
+        @include buttonColors(
+            $base: (textColor: --dein-btn-filled-primary-color, backgroundColor: --dein-btn-filled-primary-gold-bg),
+            $hover: (textColor: --dein-btn-filled-primary-color, backgroundColor: --dein-btn-filled-primary-gold-bg),
+            $active: (textColor: --dein-btn-filled-primary-active-color, backgroundColor: --dein-btn-filled-primary-active-bg),
+            $disabled: (textColor: --dein-btn-filled-primary-disabled-color, backgroundColor: --dein-btn-filled-primary-disabled-bg),
+        );
+    }
+
+    &.#{$className}-color-blue {
+        @include buttonColors(
+            $base: (textColor: --dein-btn-filled-primary-color, backgroundColor: --dein-btn-filled-primary-blue-bg),
+            $hover: (textColor: --dein-btn-filled-primary-color, backgroundColor: --dein-btn-filled-primary-blue-bg),
+            $active: (textColor: --dein-btn-filled-primary-active-color, backgroundColor: --dein-btn-filled-primary-active-bg),
+            $disabled: (textColor: --dein-btn-filled-primary-disabled-color, backgroundColor: --dein-btn-filled-primary-disabled-bg),
+        );
+    }
+}
+
+// sized
+.#{$className}-lg {
+    height: 5.6rem;
+    padding: 2.15rem 4.86rem;
+    border-radius: 1.8rem;
+}
+
+// button icon
+.#{$className}-icon {
+    margin-left: 0.5rem;
+}
+
+.#{$className}-icon-only {
+    width: 4.6rem;
+    height: 4.6rem;
+    padding: 1.6rem;
+    border-radius: 50%;
+
+    @include media-breakpoint(xs) {
+        width: 3.2rem;
+        height: 3.2rem;
+        padding: 0.9rem;
+    }
+
+    .#{$className}-icon {
+        margin-left: 0;
+    }
+}
+
+// link button
+.#{$className}-link {
+    color: #C0C0C0;
+    padding: 0;
+
+    &:not(:disabled):hover, &:not(.disabled):hover, &:not(.#{$className}-disabled):hover {
+        text-decoration: underline;
+    }
+
+    &:disabled, &.disabled, &#{$className}-disabled {
+        color: #3D3C42;
+    }
+}

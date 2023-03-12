@@ -1,0 +1,16 @@
+.panels {
+  position: absolute;
+  width: 100vw;
+  max-width: 100%;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+
+  &_lines {
+    display: 'inherit';
+  }
+}
+
+.line {
+  display: inherit;
+}

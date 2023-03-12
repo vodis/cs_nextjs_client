@@ -1,0 +1,85 @@
+'use client';
+
+import React, { useRef, useCallback, useEffect, useState } from 'react'
+import { IPanels } from './types'
+import { useResize } from '../../hooks'
+import styles from './panels.module.scss'
+import { debounce } from 'lodash'
+
+export default function Panels(props: IPanels) {
+  const { text, play } = props
+  const panelsRef = useRef(null)
+  const { width, height } = useResize(panelsRef)
+  const [svgKey, setSvgKey] = useState(0)
+
+  const columnNumber = 7
+  const columnWidth = 0
+
+  const getPosition = useCallback((i: number) => {
+    return width / columnNumber * i
+  }, [width])
+
+  // Each time when screen size is changed 
+  // we have to re-create svg with new parameters
+  // by update svgKey
+  const onReCreate = debounce(() => {
+    setSvgKey(svgKey + 1)
+  }, 1000)
+
+  useEffect(() => {
+    if (width) {
+      onReCreate()
+    }
+    return () => {
+      onReCreate()
+    }
+  }, [width])
+
+  useEffect(() => {
+    if (play === false) {
+      setSvgKey(svgKey + 1)
+    }
+  }, [play])
+  
+  return (
+    <div 
+      className={`${styles['panels']} hidden-md-down`}
+      ref={panelsRef}
+    >
+      {svgKey 
+        ? (
+          <svg key={svgKey} viewBox={`0 0 ${width} ${height}`} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <g className={`${styles['panels_lines']}`}>
+              {Array.from(Array(columnNumber).keys()).map((_, i) => {
+                if (!i) {
+                  return null
+                }
+                return (
+                  <line key={i} className={`${styles[`line`]}`} x1={play ? width/2 : getPosition(i)} x2={play ? width/2 : getPosition(i)} y1={0} y2={play ? 0 : height} stroke="#d4d4d3" >
+                    {/* play normal */}
+                    {play ? (
+                      <>
+                        <animate attributeName="y2" from={0} to={height} dur="250ms" fill="freeze"/>
+                        <animate attributeName="x1" from={width/2} to={getPosition(i)} begin="250ms" dur="500ms" fill="freeze"/>
+                        <animate attributeName="x2" from={width/2} to={getPosition(i)} begin="250ms" dur="500ms" fill="freeze"/>
+                      </>
+                    ) : null}
+                    {/* play reverse */}
+                    {!play ? (
+                      <>
+                        <animate attributeName="x1" from={getPosition(i)} to={width/2} dur="500ms" fill="freeze"/>
+                        <animate attributeName="x2" from={getPosition(i)} to={width/2} dur="500ms" fill="freeze"/>
+                        <animate attributeName="y2" from={height} to={0} begin="500ms" dur="250ms" fill="freeze"/>
+                      </>
+                    ) : null}
+                  </line>
+                )
+              })}
+            </g>
+          </svg>
+        ) 
+        : null
+      }
+    </div>
+  )
+}
