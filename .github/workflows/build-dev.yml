@@ -12,7 +12,7 @@ on:
 env:
   REMOTE_HOST: "185.69.154.168"
   REMOTE_USER: "root"
-  REMOTE_KEY: "JADbeg75Hzpn"
+  REMOTE_KEY: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDF7Guwp7IhLpb8Y05hb3jzdXsZW0rD3yg6p3N0rorKYDvgmfyjmbYcf9FWtcCiS3+7h4Hfa+CQKly9MmahAT6hQeq7SpKZDwWK++BSITIPiYJwt3Rlk22XMLlAEhWpm8JJNf3hcsVmamS0JIArm7LYDUbQckDXFzknWXLd6U3gLVaaFDH8ym8XYIBrmb/p+3YyFxjYkR5srL+nW6ty0AxdAb2d3reQ1bWqrG/5N6KJf2ysV3Za1b9SYJNWoFeKMAtdm/K6QIo/2+FUOMt0lE4E+qHv+AJfXIWtRxyulgWOhrT3CfkkvajQaRFCQSLliN+PwbZLpjFvYycK5oBdyMNczwPD7d9uCTcjpml+2+DwHDcpSnLkwjxD+/CMEuS6RFQXOcDAQudGtzwgzYxzDniyRa6ftm38bfIaTaALwaLvU5lLGlvTPhJhwZBYJjhDqas2lQxgY7GUzvkg2A5WnM0cT63n9urQsTfMq4SuIfOgfijhormVctAN1uUMQ9rPh+s= vodis@MacBook-Pro-1"
   REMOTE_PATH: "/home/admin/web/craftscript.com/public_html"
 
 permissions:
