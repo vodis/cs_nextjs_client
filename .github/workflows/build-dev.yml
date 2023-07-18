@@ -1,0 +1,64 @@
+name: Build DEV - Frontend
+
+on:
+  push:
+    branches:
+      - "develop"
+    paths-ignore:
+      - "README.md"
+
+  workflow_dispatch:
+
+env:
+  REMOTE_HOST: "185.69.154.168"
+  REMOTE_USER: "root"
+  REMOTE_KEY: "JADbeg75Hzpn"
+  REMOTE_PATH: "/home/admin/web/craftscript.com/public_html"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-frontend-ci:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Rsync deploy
+        uses: burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -avzr --delete
+          path: .
+          remote_host: ${{ env.REMOTE_HOST }}
+          remote_user: ${{ env.REMOTE_USER }}
+          remote_key: ${{ env.REMOTE_KEY }}
+          remote_path: ${{ env.REMOTE_PATH }}
+
+      - name: Installing frontend dependencies
+        run: |
+          npm install
+          ls -al
+
+      - name: Building frontend
+        env:
+          REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
+        run: |
+          rm .env
+          CI=false npm run build
+          ls -al ./.next
+
+      - name: Start the Node.js server
+        run: |
+          CI=false npm run start
