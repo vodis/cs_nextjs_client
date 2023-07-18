@@ -7,17 +7,17 @@ import styles from './panels.module.scss'
 import { debounce } from 'lodash'
 
 export default function Panels(props: IPanels) {
-  const { text, play } = props
+  const { text = '', play } = props
   const panelsRef = useRef(null)
   const { width, height } = useResize(panelsRef)
   const [svgKey, setSvgKey] = useState(0)
 
   const columnNumber = 7
-  const columnWidth = 0
+  const columnWidth = width / columnNumber
 
   const getPosition = useCallback((i: number) => {
-    return width / columnNumber * i
-  }, [width])
+    return columnWidth * i
+  }, [columnWidth])
 
   // Each time when screen size is changed 
   // we have to re-create svg with new parameters
@@ -76,6 +76,18 @@ export default function Panels(props: IPanels) {
                 )
               })}
             </g>
+            <g className={`${styles['panels_text']}`}>
+              {Array.from(text).map((char, i) => {
+                return (
+                  <text key={i} x={getPosition(i) + columnWidth / 2} y="40%" dominantBaseline="middle" textAnchor="middle" fill="#d4d4d3">{char}</text>
+                )
+              })}
+            </g>
+            <style>
+              {
+                `text { font-size: 22rem }`
+              }
+            </style>
           </svg>
         ) 
         : null
