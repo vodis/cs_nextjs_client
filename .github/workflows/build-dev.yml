@@ -11,9 +11,9 @@ on:
 
 env:
   REMOTE_HOST: "185.69.154.168"
-  REMOTE_USER: "root"
-  REMOTE_KEY: "-----BEGIN RSA PUBLIC KEY----- MIIBigKCAYEAxexrsKeyIS6W/GNOYW9483V7GVtKw98oOqdzdK6KymA74Jn8o5m2HH/RVrXAokt/u4eB32vgkCpcvTJmoQE+oUHqu0qSmQ8FivvgUiEyD4mCcLd0ZZNtlzC5QBIVqZvCSTX94XLFZmpktCSAK5uy2A1G0HJA1xc5J1ly3elN4C1WmhQx/MpvF2CAa5m/6ft2MhcY2JEebKy/p1urctAMXQG9nd63kNW1qqxv+TeiiX9srFd2WtW/UmCTVqBXijALXZvyukCKP9vhVDjLdJROBPqh7/gCX1yFrUccrpYFjoa09wn5JL2o0GkRQkEi5Yjfj8G2S6Yxb2MnCuaAXcjDXM8Dw+3fbgk3I6Zpftvg8Bw3KUpy5MI8Q/vwjBLkukRUFznAwELnRrc8IM2Mcw54skWun7Zt/G3yGk2gC8Gi71OZSxpb0z4SYcGQWCY4Q6mrNpUMYGOxlM75INgOVpzNHE+t5/bq0LE3zKuEriHzoH4o4aK5lXLQDdblDEPaz4frAgMBAAE= -----END RSA PUBLIC KEY-----"
-  REMOTE_PATH: "/home/admin/web/craftscript.com/public_html"
+  FTP_USER: "root"
+  FTP_PASSWORD: "JADbeg75Hzpn"
+  FTP_PATH: "/home/admin/web/craftscript.com/public_html"
 
 permissions:
   id-token: write
@@ -36,15 +36,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Rsync deploy
-        uses: burnett01/rsync-deployments@5.2.1
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          switches: -avzr --delete
-          path: .
-          remote_host: ${{ env.REMOTE_HOST }}
-          remote_user: ${{ env.REMOTE_USER }}
-          remote_key: ${{ env.REMOTE_KEY }}
-          remote_path: ${{ env.REMOTE_PATH }}
+          server: ${{ env.REMOTE_HOST }}
+          username: ${{ env.FTP_USER }}
+          password: ${{ env.FTP_PASSWORD }}
+          server-dir: ${{ env.FTP_PATH }}
 
       - name: Installing frontend dependencies
         run: |
