@@ -13,7 +13,7 @@ env:
   REMOTE_HOST: "185.69.154.168"
   FTP_USER: "root"
   FTP_PASSWORD: "JADbeg75Hzpn"
-  FTP_PATH: "/home/admin/web/craftscript.com/public_html"
+  FTP_PATH: "/home/admin/web/craftscript.com/public_html/"
 
 permissions:
   id-token: write
