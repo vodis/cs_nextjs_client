@@ -25,15 +25,8 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - name: Get latest code
-        uses: actions/checkout@v3
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Use rsync deploy
+      - uses: actions/checkout@v3
+      - name: rsync deploy
         uses: burnett01/rsync-deployments@5.2.1
         with:
           switches: -avzr --delete
@@ -42,6 +35,11 @@ jobs:
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.REMOTE_KEY }}
           remote_path: ${{ secrets.REMOTE_PATH }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Installing frontend dependencies
         run: |
