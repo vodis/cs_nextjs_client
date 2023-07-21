@@ -35,6 +35,7 @@ jobs:
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.REMOTE_KEY }}
           remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_key_pass: ${{ secrets.DEPLOY_KEY_PASS }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
