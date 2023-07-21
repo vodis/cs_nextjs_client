@@ -44,7 +44,7 @@ jobs:
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.REMOTE_KEY }}
           remote_path: ${{ secrets.REMOTE_PATH }}
-          rsh: /usr/bin/ssh 
+          rsh: ~/.ssh
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
