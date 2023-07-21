@@ -37,6 +37,8 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.REMOTE_KEY }}"
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_auth_sock
 
       - name: Use rsync deploy
         uses: burnett01/rsync-deployments@5.2.1
@@ -47,6 +49,7 @@ jobs:
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.REMOTE_KEY }}
           remote_path: ${{ secrets.REMOTE_PATH }}
+          rsh: /usr/bin/ssh 
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
