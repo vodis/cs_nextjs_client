@@ -33,12 +33,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.REMOTE_KEY }}
 
-      - name: Start SSH agent and set SSH_AUTH_SOCK
+      - name: Start SSH agent and add private key
         run: |
           eval "$(ssh-agent -s)"
-          echo $SSH_AUTH_SOCK > /tmp/ssh_agent.sock
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          ssh-add - <<< "${{ secrets.REMOTE_KEY }}"
 
       - name: Use rsync deploy
         uses: burnett01/rsync-deployments@5.2.1
