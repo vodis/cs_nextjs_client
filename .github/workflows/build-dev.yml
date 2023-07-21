@@ -44,7 +44,6 @@ jobs:
 
       - name: Start SSH agent and set SSH_AUTH_SOCK
         run: |
-          eval "$(ssh-agent -s)"
           echo $SSH_AUTH_SOCK > /tmp/ssh_agent.sock
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
