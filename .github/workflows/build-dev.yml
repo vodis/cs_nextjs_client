@@ -36,7 +36,7 @@ jobs:
       - name: Start SSH agent and add private key
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add - <<< "${{ secrets.REMOTE_KEY }}"
+          ssh-add "${{ secrets.REMOTE_KEY }}"
         env:
           SSH_AUTH_SOCK: /tmp/ssh_auth_sock
 
