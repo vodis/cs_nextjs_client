@@ -42,6 +42,13 @@ jobs:
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-add - <<< "${{ secrets.REMOTE_KEY }}"
 
+      - name: Start SSH agent and set SSH_AUTH_SOCK
+        run: |
+          eval "$(ssh-agent -s)"
+          echo $SSH_AUTH_SOCK > /tmp/ssh_agent.sock
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
       - name: Use rsync deploy
         uses: burnett01/rsync-deployments@5.2.1
         with:
