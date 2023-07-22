@@ -30,3 +30,15 @@ jobs:
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: ${{ secrets.FTP_PATH }}
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to SFTP
+      uses: appleboy/sftp-action@master
+      with:
+        server: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local: ${{ github.workspace }}
+        remote: ${{ secrets.FTP_PATH }}
