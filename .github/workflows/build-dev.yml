@@ -17,32 +17,16 @@ permissions:
   contents: read
 
 jobs:
-  build-frontend-ci:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Start SSH agent and add private key
-        run: |
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.REMOTE_KEY }}" | ssh-add -
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_auth_sock
-
-      - name: Start SSH agent and add private key
-        run: |
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.REMOTE_KEY }}" | ssh-add -
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_auth_sock
-
-      - name: Deploy using rsync
-        run: |
-          rsync -avzr --delete -e "ssh -o StrictHostKeyChecking=no -i /root/.ssh" \
-            /home/admin/web/craftscript.com/public_html/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_PATH }}
+    - name: Get latest code
+      uses: actions/checkout@v3
+    - name: Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ${{ secrets.FTP_PATH }}
