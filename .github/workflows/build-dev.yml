@@ -38,10 +38,7 @@ jobs:
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
           exclude: |
-            **/.git*
-            **/.git*/**
             **/node_modules/**
-            fileToExclude.txt
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
