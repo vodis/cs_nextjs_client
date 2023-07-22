@@ -14,18 +14,25 @@ permissions:
   contents: read
 
 jobs:
-  web-deploy:
-    name: Deploy
+  deploy_job:
     runs-on: ubuntu-latest
+    name: build&deploy
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Deploy to SFTP
-      uses: appleboy/sftp-action@v1.2.0
-      with:
-        server: ${{ secrets.REMOTE_HOST }}
-        username: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local: ${{ github.workspace }}
-        remote: ${{ secrets.FTP_PATH }}
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build
+        run: npm build
+
+      - name: deploy file to server
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: 'root'
+          server: '${{ secrets.REMOTE_HOST }}'
+          ssh_private_key: ${{ secrets.REMOTE_KEY }}
+          local_path: './*'
+          remote_path: ${{ secrets.FTP_PATH }}
+          sftpArgs: '-o ConnectTimeout=5'
