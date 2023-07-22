@@ -23,7 +23,7 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - name: 🚚 Get latest code
+      - name: 🕵️‍♂️ Get latest code
         uses: actions/checkout@v3
 
       - name: 🚀 Deploy file to server
@@ -53,7 +53,7 @@ jobs:
           npm install
           ls -al
 
-      - name: Building frontend
+      - name: 🏗 Building frontend
         env:
           REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
         run: |
@@ -63,4 +63,4 @@ jobs:
 
       - name: 🏁 Run frontend
         run: |
-          npm start
+          pm2 start "npm run start"
