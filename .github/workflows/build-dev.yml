@@ -14,20 +14,19 @@ permissions:
   contents: read
 
 jobs:
-  deploy_job:
+  build-frontend-ci:
     runs-on: ubuntu-latest
-    name: build&deploy
+    name: build&deploy&run
+
+    strategy:
+      matrix:
+        node-version: [18.x]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
-
-      - name: deploy file to server
+      - name: 🚀 Deploy file to server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           username: 'root'
@@ -38,3 +37,30 @@ jobs:
           remote_path: ${{ secrets.FTP_PATH }}
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            fileToExclude.txt
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Installing frontend dependencies
+        run: |
+          npm install
+          ls -al
+
+      - name: Building frontend
+        env:
+          REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
+        run: |
+          rm .env
+          CI=false npm run build
+          ls -al ./.next
+
+      - name: 🏁 Run frontend
+        run: |
+          npm start
