@@ -58,6 +58,9 @@ jobs:
           CI=false npm run build
           ls -al ./.next
 
+      - name: Install pm2
+        run: npm install pm2 -g
+        
       - name: 🏁 Run frontend
         run: |
           pm2 start "npm run start"
