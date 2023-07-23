@@ -26,7 +26,6 @@ jobs:
       - name: 🕵️‍♂️ Get latest code
         uses: actions/checkout@v3
         with:
-          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
           path: |
             ~/.npm
             ${{ github.workspace }}/.next/cache
@@ -43,7 +42,7 @@ jobs:
           server: '${{ secrets.REMOTE_HOST }}'
           ssh_private_key: ${{ secrets.REMOTE_KEY }}
           password: ${{  secrets.FTP_PASSWORD }}
-          local_path: './out/*'
+          local_path: './*'
           remote_path: ${{ secrets.FTP_PATH }}
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
@@ -65,7 +64,7 @@ jobs:
           REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
         run: |
           rm .env
-          CI=false npm run export
+          CI=false npm run build
           ls -al ./.next
 
       - name: Install pm2
