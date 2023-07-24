@@ -7,12 +7,11 @@ on:
       - 'releases/**'
     paths-ignore:
       - "README.md"
-  pull_request:
-    branches:
-      - "develop"
-      - 'releases/**'
 
   workflow_dispatch:
+
+env:
+  TOUCH_BRANCH: "develop"
 
 permissions:
   id-token: write
@@ -50,6 +49,7 @@ jobs:
       
       - name: Installing frontend dependencies
         run: |
+          git checkout ${{ env.TOUCH_BRANCH }}
           npm install
           ls -al
 
