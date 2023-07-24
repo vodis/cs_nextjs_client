@@ -37,8 +37,6 @@ jobs:
           remote_path: ${{ secrets.FTP_PATH }}
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
-          exclude: |
-            **/node_modules/**
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
