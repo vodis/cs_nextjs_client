@@ -26,6 +26,15 @@ jobs:
     steps:
       - name: 🕵️‍♂️ Get latest code
         uses: actions/checkout@v3
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -36,6 +45,14 @@ jobs:
         run: |
           npm install
           ls -al
+
+      - name: 🏗 Building frontend
+        env:
+          REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
+        run: |
+          rm .env
+          CI=false npm run build
+          ls -al ./.next
 
       - name: 🚀 Deploy file to server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
@@ -48,14 +65,6 @@ jobs:
           remote_path: ${{ secrets.FTP_PATH }}
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
-
-      - name: 🏗 Building frontend
-        env:
-          REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
-        run: |
-          rm .env
-          CI=false npm run build
-          ls -al ./.next
 
       - name: Install pm2
         run: npm install pm2 -g
