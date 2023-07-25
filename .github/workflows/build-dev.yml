@@ -10,9 +10,6 @@ on:
 
   workflow_dispatch:
 
-env:
-  TOUCH_BRANCH: "develop"
-
 permissions:
   id-token: write
   contents: read
@@ -20,7 +17,7 @@ permissions:
 jobs:
   build-frontend-ci:
     runs-on: ubuntu-latest
-    name: build&deploy&run
+    name: build&deploy
 
     strategy:
       matrix:
@@ -30,18 +27,6 @@ jobs:
       - name: 🕵️‍♂️ Get latest code
         uses: actions/checkout@v3
 
-      - name: 🚀 Deploy file to server
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          username: 'root'
-          server: '${{ secrets.REMOTE_HOST }}'
-          ssh_private_key: ${{ secrets.REMOTE_KEY }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local_path: './*'
-          remote_path: ${{ secrets.FTP_PATH }}
-          sftpArgs: '-o ConnectTimeout=5'
-          sftp_only: true
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -49,9 +34,20 @@ jobs:
       
       - name: Installing frontend dependencies
         run: |
-          git checkout ${{ env.TOUCH_BRANCH }}
           npm install
           ls -al
+
+      - name: 🚀 Deploy file to server
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: 'root'
+          server: '${{ secrets.REMOTE_HOST }}'
+          ssh_private_key: ${{ secrets.REMOTE_KEY }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local_path: './'
+          remote_path: ${{ secrets.FTP_PATH }}
+          sftpArgs: '-o ConnectTimeout=5'
+          sftp_only: true
 
       - name: 🏗 Building frontend
         env:
