@@ -43,7 +43,7 @@ jobs:
       
       - name: Installing frontend dependencies
         run: |
-          npm install
+          npm ci
           ls -al
 
       - name: 🏗 Building frontend
