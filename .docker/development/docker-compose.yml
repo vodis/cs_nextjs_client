@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  craftscript-client:
+    build:
+      context: ../../
+      dockerfile: .docker/development/Dockerfile
+    image: craftscript-client
+    ports:
+      - '3001:3000'
