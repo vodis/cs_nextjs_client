@@ -43,22 +43,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      
-      - name: Installing frontend dependencies
-        run: |
-          npm install
-          ls -al
 
-      - name: 🏗 Building frontend
-        env:
-          REACT_APP_BACKEND_URL: "https://api.craftscript.com/"
-        run: |
-          rm .env
-          CI=false npm run build
-          ls -al ./.next
-
-      - name: Docker build container
+      - name: 🐳 Docker build container
         run: docker build -t craftscript_fe .
 
-      - name: Run Docker container
+      - name: 🐳 Run Docker container
         run: docker run -d -p 3000:3000 craftscript_fe
