@@ -57,9 +57,8 @@ jobs:
           CI=false npm run build
           ls -al ./.next
 
-      - name: Install pm2
-        run: npm install pm2 -g
+      - name: Docker build container
+        run: docker build -t craftscript_fe .
 
-      - name: 🏁 Run frontend
-        run: |
-          pm2 start "npm run start"
+      - name: Run Docker container
+        run: docker run -d -p 3000:3000 craftscript_fe
