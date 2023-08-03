@@ -19,10 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     name: build&deploy
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
       - name: 🕵️‍♂️ Get latest code
         uses: actions/checkout@v3
@@ -38,11 +34,6 @@ jobs:
           remote_path: ${{ secrets.FTP_PATH }}
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: 🐳 Docker build container
         run: docker build -t craftscript_fe .
