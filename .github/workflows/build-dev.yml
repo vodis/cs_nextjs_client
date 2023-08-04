@@ -36,7 +36,13 @@ jobs:
           sftp_only: true
 
       - name: 🐳 Docker build container
-        run: docker build -t craftscript_fe .
+        run: docker build -t craftscript_fe ../
+
+      - name: Print Current Directory
+        run: pwd
+
+      - name: List Files in Current Directory
+        run: ls -la
 
       - name: 🐳 Run Docker container
         run: docker run -d -p 3000:3000 craftscript_fe
