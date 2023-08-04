@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     name: build&deploy
 
+    strategy:
+      matrix:
+        node-version: [18.x]
+
     steps:
       - name: 🕵️‍♂️ Get latest code
         uses: actions/checkout@v3
