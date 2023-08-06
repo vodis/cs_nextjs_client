@@ -39,5 +39,9 @@ jobs:
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
 
-      - name: 🐳 Docker build containers and run
-        run: docker-compose up
+      - name: 🐳 Using Docker and Makefile
+        run: make build-development
+
+      - name: 🐳 Start Docker Container
+        run: make start-development
+        

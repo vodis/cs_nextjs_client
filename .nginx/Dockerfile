@@ -1,5 +1,5 @@
-# Base on offical NGINX Alpine image
-FROM nginx:alpine
+# Base on offical Node.js Alpine image
+FROM node:16-alpine AS base
 
 # Remove any existing config files
 RUN rm /etc/nginx/conf.d/*

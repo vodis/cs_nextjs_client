@@ -6,5 +6,7 @@ docker-compose.yml
 .dockerignore
 .next/                # Existing Next.js builds
 .nginx/ 
-.git/
+.git
 .gitignore
+.docker
+README.md
