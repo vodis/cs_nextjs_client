@@ -40,7 +40,7 @@ jobs:
           sftp_only: true
 
       - name: 🛠 Execute npm commands on remote server
-        uses: appleboy/ssh-action@v0.2.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: 'root'
