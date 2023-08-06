@@ -30,7 +30,7 @@ jobs:
       - name: 🚀 Deploy file to server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          username: 'root'
+          username: ${{ secrets.REMOTE_USER }}
           server: '${{ secrets.REMOTE_HOST }}'
           ssh_private_key: ${{ secrets.REMOTE_KEY }}
           password: ${{ secrets.FTP_PASSWORD }}
@@ -43,8 +43,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
-          username: 'root'
-          key: ${{ secrets.FTP_PASSWORD }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
           script: |
             cd ${{ secrets.FTP_PATH }}
             make build-development
