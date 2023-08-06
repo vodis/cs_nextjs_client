@@ -39,6 +39,11 @@ jobs:
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
 
+  container:
+    runs-on: ubuntu-latest
+    container: node:10.16-jessie
+
+    steps:
       - name: 🐳 Using Docker and Makefile
         run: make build-development
 
