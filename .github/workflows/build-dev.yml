@@ -43,8 +43,8 @@ jobs:
         uses: appleboy/ssh-action@v0.2.0
         with:
           host: ${{ secrets.REMOTE_HOST }}
-          username: 'your-username'
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: 'root'
+          key: ${{ secrets.REMOTE_KEY }}
           script: |
             cd ${{ secrets.FTP_PATH }}
             make build-development
