@@ -19,7 +19,7 @@ RUN \
 # 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /var/www/craftscript.com
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /var/www/craftscript.com/node_modules ./node_modules
 COPY . .
 # This will do the trick, use the corresponding env file for each environment.
 COPY .env.development .env.production
