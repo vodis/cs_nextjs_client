@@ -1,4 +1,5 @@
-FROM node:16-alpine
+# Base on offical Node.js Alpine image
+FROM node:16-alpine AS base
 
 # Set working directory
 WORKDIR /usr/app
@@ -6,15 +7,17 @@ WORKDIR /usr/app
 # Install PM2 globally
 RUN npm install --global pm2
 
-# Copy package.json and package-lock.json before other files
-# Utilise Docker cache to save re-installing dependencies if unchanged
-COPY ./package*.json ./
-
-# Install dependencies
-RUN npm install --production
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
 # Copy all files
-COPY ./ ./
+COPY . .
 
 # Build app
 RUN npm run build
