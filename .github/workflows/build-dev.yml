@@ -44,7 +44,7 @@ jobs:
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: 'root'
-          key: ${{ secrets.REMOTE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.FTP_PATH }}
             make build-development
