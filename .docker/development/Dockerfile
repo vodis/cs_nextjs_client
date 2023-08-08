@@ -44,11 +44,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Bundle static assets with nginx
 FROM nginx:latest AS production
 
-# Log folders
-RUN ls -la
-
+# Specify multi-stage build production
 # *.conf files in conf.d/ dir get included in main config
-COPY /.nginx/nginx.conf /etc/nginx/conf.d/craftscript.com.conf
+COPY --from=dev app/.nginx/nginx.conf /etc/nginx/conf.d/craftscript.com.conf
 
 # Expose the listening port
 EXPOSE 80
