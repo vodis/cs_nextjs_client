@@ -42,19 +42,21 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Bundle static assets with nginx
-FROM nginx:1.21.0-alpine as production
+FROM node:18-alpine AS production
+
 ENV NODE_ENV production
 
 # Remove existing files from nginx directory
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built assets from 'builder' stage
-# add nginx config
+# Copy config files
+# *.conf files in conf.d/ dir get included in main config
 COPY --from=builder /usr/src/next-nginx/out /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/craftscript.conf
 
-# Expose port 80 for nginx
+# Expose the listening port
 EXPOSE 80
 
-# Start nginx
+# Launch NGINX
 CMD ["nginx", "-g", "daemon off;"]
