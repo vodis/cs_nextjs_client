@@ -42,12 +42,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Bundle static assets with nginx
-FROM node:18-alpine AS production
-
-ENV NODE_ENV production
+FROM nginx:latest AS production
 
 # *.conf files in conf.d/ dir get included in main config
-COPY --from=builder /app/.nginx/nginx.conf /etc/nginx/conf.d/craftscript.conf
+COPY --from=builder /app/.nginx/nginx.conf /etc/nginx/conf.d/craftscript.com.conf
 
 # Expose the listening port
 EXPOSE 80
