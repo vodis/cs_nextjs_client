@@ -46,14 +46,8 @@ FROM node:18-alpine AS production
 
 ENV NODE_ENV production
 
-# Remove existing files from nginx directory
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy built assets from 'builder' stage
-# Copy config files
 # *.conf files in conf.d/ dir get included in main config
-COPY --from=builder /usr/src/next-nginx/out /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/craftscript.conf
+COPY /.nginx/nginx.conf /etc/nginx/conf.d/craftscript.conf
 
 # Expose the listening port
 EXPOSE 80
