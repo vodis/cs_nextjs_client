@@ -51,7 +51,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built assets from 'builder' stage
 # Copy config files
-COPY --from=builder /usr/src/next-nginx/out /usr/share/nginx/html
+COPY --from=builder /app/out /usr/share/nginx/html
 
 # Specify multi-stage build production
 # *.conf files in conf.d/ dir get included in main config
