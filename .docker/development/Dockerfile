@@ -46,7 +46,7 @@ FROM nginx:latest AS production
 
 # Specify multi-stage build production
 # *.conf files in conf.d/ dir get included in main config
-COPY --from=builder /app/.nginx/nginx.conf /etc/nginx/craftscript.com.conf
+COPY --from=builder /app/.nginx/nginx.conf /etc/nginx/conf.d/craftscript.conf
 COPY --from=builder /app/.next /usr/share/nginx/html
 
 # Expose the listening port
