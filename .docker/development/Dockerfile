@@ -42,7 +42,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Bundle static assets with nginx
-FROM nginx:latest AS production
+FROM nginx:latest AS development
 
 # Specify multi-stage build production
 # *.conf files in conf.d/ dir get included in main config
