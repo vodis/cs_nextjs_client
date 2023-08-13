@@ -39,24 +39,17 @@ jobs:
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: 🛠 Execute npm commands on remote server
+        uses: appleboy/ssh-action@master
         with:
-          node-version: ${{ matrix.node-version }}
-      
-      - name: Installing frontend dependencies
-        run: |
-          CI=false npm ci
-          ls -al
-
-      - name: 🏗 Building frontend
-        env:
-          REACT_APP_BACKEND_URL: ${{ env.REACT_APP_BACKEND_URL }}
-        run: |
-          rm .env
-          CI=false npm run build
-          ls -al ./.next
-
-      - name: 🏁 Run frontend
-        run: |
-          CI=false pm2 start npm --name "craftscript.com" -- start
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          script: |
+            cd ${{ secrets.FTP_PATH }}
+            pwd
+            npm ci 
+            ls -al
+            CI=false npm run build
+            ls -al ./.next
+            pm2 start npm --name "craftscript.com" -- start
