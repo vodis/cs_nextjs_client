@@ -47,9 +47,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           script: |
             cd ${{ secrets.FTP_PATH }}
-            pwd
-            npm ci 
-            ls -al
-            CI=false npm run build
-            ls -al ./.next
-            pm2 start npm --name "craftscript.com" -- start
+            make build-development
+            make start-development
