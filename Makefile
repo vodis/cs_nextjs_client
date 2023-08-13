@@ -1,7 +1,7 @@
 .PHONY: build-development
 build-development: ## Build the development Next.Js application.
 	npm -v
-  node -v
+	node -v
 	npm ci
 	CI=false npm run build
 	ls -al ./.next
