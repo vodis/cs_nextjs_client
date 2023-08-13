@@ -46,6 +46,8 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh 
             cd ${{ secrets.FTP_PATH }}
             make build-development
             make start-development
