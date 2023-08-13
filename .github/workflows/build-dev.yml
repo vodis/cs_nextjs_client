@@ -46,7 +46,7 @@ jobs:
       
       - name: Installing frontend dependencies
         run: |
-          npm install
+          npm ci
           ls -al
 
       - name: 🏗 Building frontend
@@ -62,4 +62,4 @@ jobs:
 
       - name: 🏁 Run frontend
         run: |
-          pm2 start "npm run start"
+          pm2 start npm --name "craftscript.com" -- start
