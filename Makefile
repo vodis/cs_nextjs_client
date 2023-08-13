@@ -6,5 +6,7 @@ build-development: ## Build the development Next.Js application.
 
 .PHONY: start-development
 start-development: ## Start the development PM2 manager.
-	npm install pm2 -g
+	if ! command -v pm2 &> /dev/null; then
+  	npm install pm2 -g
+	pm2 delete craftscript.com
 	pm2 start npm --name "craftscript.com" -- start
