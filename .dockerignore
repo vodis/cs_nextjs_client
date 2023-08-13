@@ -1,0 +1,12 @@
+# add git-ignore syntax here of things you don't want copied into docker image
+
+node_modules/         # Installed inside container
+Dockerfile
+docker-compose.yml
+.dockerignore
+.next/                # Existing Next.js builds
+.nginx/ 
+.git
+.gitignore
+.docker
+README.md

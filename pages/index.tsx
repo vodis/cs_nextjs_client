@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <Panels play={play} />
+      <Panels play={play} text="future" />
       <button
         className={`btn btn-filled`}
         onClick={() => setPlay(false)}
