@@ -1,23 +1,23 @@
+.PHONY: install-development
+build-development: ## Install the development packages.
+	npm ci && ls -al
+
 .PHONY: build-development
-build-development: ## Build the development docker image.
-	docker compose -f .docker/development/docker-compose.yml build
+build-development: ## Build the development Next.Js application.
+	CI=false npm run build
+  ls -al ./.next
 
 .PHONY: start-development
-start-development: ## Start the development docker container.
-	docker compose -f .docker/development/docker-compose.yml up -d
-
-.PHONY: stop-development
-stop-development: ## Stop the development docker container.
-	docker compose -f .docker/development/docker-compose.yml down
+start-development: ## Start the development PM2 manager.
+	pm2 start npm --name "craftscript.com" -- start
   
 .PHONY: build-production
-build-production: ## Build the production docker image.
-	docker compose -f .docker/production/docker-compose.yml build
+build-production: ## Build the production packages.
+
 
 .PHONY: start-production
-start-production: ## Start the production docker container.
-	docker compose -f .docker/production/docker-compose.yml up -d
+start-production: ## Start the production Next.Js application.
+
 
 .PHONY: stop-production
-stop-production: ## Stop the production docker container.
-	docker compose -f .docker/production/docker-compose.yml down
+stop-production: ## Stop the production PM2 manager.
