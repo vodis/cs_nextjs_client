@@ -91,7 +91,7 @@ export default function Panels(props: IPanels) {
               })}
             </g>
             <style>
-              {'text { font-size: 22rem }'}
+              {'text { font-size: 18rem; opacity: 0.5; }'}
               {Array.from(text).map((char, i) => (
                 `
                   @keyframes appear${i} {

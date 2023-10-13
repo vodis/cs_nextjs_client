@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <Panels play={play} text="future" />
+      <Panels play={play} text={"future".toUpperCase()} />
       <button
         className={`btn btn-filled`}
         onClick={() => setPlay(false)}
