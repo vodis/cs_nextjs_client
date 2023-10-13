@@ -78,7 +78,7 @@ export default function Panels(props: IPanels) {
             </g>
             <g className={`${styles['panels_text']}`}>
               {Array.from(text).map((char, i) => {
-                return (
+                return play ? (
                   <g key={i}>
                     <clipPath id={`clip-${i}`}>
                       <rect width={columnWidth * (i + 1)} height="100%" />
@@ -87,11 +87,11 @@ export default function Panels(props: IPanels) {
                       <text x={getPosition(i) + columnWidth / 2} y="40%" style={{animation: `appear${i} 2s`}} dominantBaseline="middle" textAnchor="middle" fill="#d4d4d3">{char}</text>
                     </g>
                   </g>
-                )
+                ) : null
               })}
             </g>
             <style>
-              {'text { font-size: 22rem }'}
+              {'text { font-size: 18rem; opacity: 0.5; }'}
               {Array.from(text).map((char, i) => (
                 `
                   @keyframes appear${i} {
