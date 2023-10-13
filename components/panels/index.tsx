@@ -79,14 +79,31 @@ export default function Panels(props: IPanels) {
             <g className={`${styles['panels_text']}`}>
               {Array.from(text).map((char, i) => {
                 return (
-                  <text key={i} x={getPosition(i) + columnWidth / 2} y="40%" dominantBaseline="middle" textAnchor="middle" fill="#d4d4d3">{char}</text>
+                  <g key={i}>
+                    <clipPath id={`clip-${i}`}>
+                      <rect width={columnWidth * (i + 1)} height="100%" />
+                    </clipPath>
+                    <g clip-path={`url(#clip-${i})`}>
+                      <text x={getPosition(i) + columnWidth / 2} y="40%" style={{animation: `appear${i} 2s`}} dominantBaseline="middle" textAnchor="middle" fill="#d4d4d3">{char}</text>
+                    </g>
+                  </g>
                 )
               })}
             </g>
             <style>
-              {
-                `text { font-size: 22rem }`
-              }
+              {'text { font-size: 22rem }'}
+              {Array.from(text).map((char, i) => (
+                `
+                  @keyframes appear${i} {
+                    0% {
+                      transform: translateX(100%);
+                    }
+                    100% {
+                      transform: translateX(0);
+                    }
+                  }
+                `
+              ))}
             </style>
           </svg>
         ) 
