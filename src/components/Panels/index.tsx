@@ -6,7 +6,7 @@ import { useResize } from '../../hooks'
 import styles from './panels.module.scss'
 import { debounce } from 'lodash'
 
-export default function Panels(props: IPanels) {
+const Panels: React.FC<IPanels> = (props: IPanels) => {
   const { text = '', play } = props
   const panelsRef = useRef(null)
   const { width, height } = useResize(panelsRef)
@@ -112,3 +112,5 @@ export default function Panels(props: IPanels) {
     </div>
   )
 }
+
+export default Panels;
