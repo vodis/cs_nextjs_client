@@ -7,13 +7,9 @@ const SourcePage: React.FC = () => {
     const [play, setPlay] = useState(true)
     return (
         <>
-            <Panels play={play} text={"future".toUpperCase()} />
-            <button
-                className={`btn btn-filled`}
-                onClick={() => setPlay(false)}
-            >
-                Click
-            </button>
+            <div className="hidden lg:block">
+                <Panels play={play} text={"future".toUpperCase()} />
+            </div>
         </>
     );
 };

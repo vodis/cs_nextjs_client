@@ -7,6 +7,7 @@ module.exports = {
             md: '768px',
             lg: '976px',
             xl: '1440px',
+            '2xl': '1536px',
         },
         colors: {
             inherit: 'inherit',
@@ -14,6 +15,7 @@ module.exports = {
             transparent: 'transparent',
             black: '#171c1f',
             white: '#fff',
+            orange: '#FE6C00',
             gray: {
                 10: '#FAFAFA',
                 20: '#F5F2F7',
