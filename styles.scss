@@ -10,11 +10,11 @@
 // Font imports
 @font-face {
   font-family: 'Libre_Franklin';
-  src: url('./public/assets/fonts/AeonikFono/AeonikFonoTRIAL-Regular.eot');
-  src: url('./public/assets/fonts/AeonikFono/AeonikFonoTRIAL-Regular.eot?#iefix') format('embedded-opentype'),
-  url('./public/assets/fonts/AeonikFono/AeonikFonoTRIAL-Regular.woff2') format('woff2'),
-  url('./public/assets/fonts/AeonikFono/AeonikFonoTRIAL-Regular.woff') format('woff'),
-  url('./public/assets/fonts/AeonikFono/AeonikFonoTRIAL-Regular.ttf') format('truetype');
+  src: url('src/assets/fonts/AeonikFono/AeonikFono-Regular.eot');
+  src: url('src/assets/fonts/AeonikFono/AeonikFono-Regular.eot?#iefix') format('embedded-opentype'),
+  url('src/assets/fonts/AeonikFono/AeonikFono-Regular.woff2') format('woff2'),
+  url('src/assets/fonts/AeonikFono/AeonikFono-Regular.woff') format('woff'),
+  url('src/assets/fonts/AeonikFono/AeonikFono-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
