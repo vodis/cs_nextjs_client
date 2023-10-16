@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import React, { PropsWithChildren } from 'react';
 import { Header } from "@src/components/Header";
+import { Footer } from "@src/components/Footer";
 
 const aeonikFono = localFont({
     variable: '--font-aeonik-fono',
@@ -59,6 +60,7 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
         <main className="flex flex-1 flex-col bg-black">
             <Header/>
             {children}
+            <Footer/>
         </main>
         </body>
         </html>

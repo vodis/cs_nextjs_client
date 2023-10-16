@@ -4,9 +4,9 @@ import Link from "next/link";
 
 export const Header: React.FC<PropsWithChildren> = ({ children }) => {
     return (
-        <header className="z-10">
-            <div className="grid grid-cols-4 py-[15px] mx-auto md:grid-cols-7">
-                <div className="flex items-center justify-center">
+        <header className="z-10 h-16">
+            <div className="h-full grid grid-cols-4 mx-auto md:grid-cols-7">
+                <div className=" flex items-center justify-center">
                     <Link href="/"><Image src="/logo.svg" alt="logo" width={50} height={50} /></Link>
                 </div>
                 <div className="flex items-center justify-center col-start-2 col-start-2 md:col-start-5 md:col-start-5">
