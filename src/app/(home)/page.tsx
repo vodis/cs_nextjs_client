@@ -3,10 +3,10 @@ import Panels from "@src/components/Panels";
 
 const SourcePage: React.FC = () => {
     return (
-        <>
+        <div className="min-h-full">
             <section>
             </section>
-        </>
+        </div>
     );
 };
 
