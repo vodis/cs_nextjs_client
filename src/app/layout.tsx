@@ -54,10 +54,10 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
                 aeonikFono.variable,
                 neueHaasGrot.variable,
                 kodeMono.variable,
-                'min-h-screen min-h-[calc(100dvh)] flex flex-col text-gray-100 leading-normal',
+                'text-gray-100 leading-normal',
             )}
         >
-        <main className="flex flex-1 flex-col bg-black">
+        <main className="h-full flex flex-1 flex-col bg-black">
             <Header/>
             {children}
             <Footer/>
