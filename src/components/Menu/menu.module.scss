@@ -1,0 +1,40 @@
+.menu {
+  &-btn {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .menu-ico_line__first,
+  .menu-ico_line__middle,
+  .menu-ico_line__last {
+    transition: transform .3s, -webkit-transform .3s;
+  }
+
+  .menu-ico {
+    &:hover {
+      & > .menu-ico_line__first {
+        -webkit-transform: translateY(0.5rem);
+        transform: translateY(-0.25rem);
+      }
+      & > .menu-ico_line__last {
+        -webkit-transform: translateY(-0.5rem);
+        transform: translateY(0.25rem);
+      }
+    }
+    &.open {
+      & > .menu-ico_line__first {
+        -webkit-transform: rotate(45deg) matrix(1, 0, 2, 1, 8, 7);
+        transform: rotate(45deg) matrix(1, 0, 2, 1, 8, 7);
+      }
+      & > .menu-ico_line__middle {
+        opacity: 0;
+      }
+      & > .menu-ico_line__last {
+        -webkit-transform: rotate(-45deg) matrix(1, 0, -2, 1, 7, -7);
+        transform: rotate(-45deg) matrix(1, 0, -2, 1, 7, -7);
+      }
+    }
+  }
+}
+
+
