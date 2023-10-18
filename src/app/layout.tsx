@@ -7,6 +7,7 @@ import localFont from 'next/font/local';
 import React, { PropsWithChildren } from 'react';
 import { Header } from "@src/components/Header";
 import { Footer } from "@src/components/Footer";
+import Menu from "@src/components/Menu";
 
 const aeonikFono = localFont({
     variable: '--font-aeonik-fono',
@@ -58,7 +59,9 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
             )}
         >
         <main className="h-full flex flex-1 flex-col bg-black">
-            <Header/>
+            <Header>
+                <Menu/>
+            </Header>
             {children}
             <Footer/>
         </main>
