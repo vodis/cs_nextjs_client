@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './animate-title.module.scss';
-import { IAnimateTitle } from "@src/components/AnimateTitle/types";
+import { IAnimateTitle } from "./types";
 
 const AnimateTitle: React.FC<IAnimateTitle> = (props) => {
     return (

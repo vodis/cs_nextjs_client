@@ -30,16 +30,14 @@ const Panels: React.FC<IPanels> = (props: IPanels) => {
     if (width) {
       onReCreate()
     }
-    return () => {
-      onReCreate()
-    }
-  }, [width])
+    return () => {}
+  }, [width]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (play === false) {
       setSvgKey(svgKey + 1)
     }
-  }, [play])
+  }, [play, svgKey])
   
   return (
     <div 
@@ -83,7 +81,7 @@ const Panels: React.FC<IPanels> = (props: IPanels) => {
                     <clipPath id={`clip-${i}`}>
                       <rect width={columnWidth * (i + 1)} height="100%" />
                     </clipPath>
-                    <g clip-path={`url(#clip-${i})`}>
+                    <g clipPath={`url(#clip-${i})`}>
                       <text x={getPosition(i) + columnWidth / 2} y="40%" style={{animation: `appear${i} 2s`}} dominantBaseline="middle" textAnchor="middle" fill="#d4d4d3">{char}</text>
                     </g>
                   </g>
@@ -91,7 +89,16 @@ const Panels: React.FC<IPanels> = (props: IPanels) => {
               })}
             </g>
             <style>
-              {'text { font-size: 18rem; opacity: 0.5; }'}
+              {
+                `
+                  text { font-size: 18rem; opacity: 0.5; }
+                  @media only screen and (max-width: 1280px) { 
+                    text {
+                      font-size: 14rem; 
+                    }
+                  }
+                `
+              }
               {Array.from(text).map((char, i) => (
                 `
                   @keyframes appear${i} {
