@@ -7,7 +7,7 @@ import styles from './panels.module.scss'
 import { debounce } from 'lodash'
 
 const Panels: React.FC<IPanels> = (props: IPanels) => {
-  const { text = '', play } = props
+  const { text = '', play = true } = props
   const panelsRef = useRef(null)
   const { width, height } = useResize(panelsRef)
   const [svgKey, setSvgKey] = useState(0)
