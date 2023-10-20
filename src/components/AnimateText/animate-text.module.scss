@@ -1,0 +1,35 @@
+.animate-text {
+  visibility: hidden;
+  margin: 0 auto;
+  overflow: hidden;
+  border-right: .1rem solid #FE6C00;
+  white-space: nowrap;
+  animation: typing 1.5s steps(60, end) forwards,
+  blink-caret .45s step-end infinite, off-caret 1.5s step-end forwards;
+
+  @keyframes typing {
+    0% {
+      visibility: visible;
+      width: 0;
+    }
+    100% {
+      visibility: visible;
+      width: 100%;
+    }
+  }
+
+  @keyframes blink-caret {
+    from, to {
+      border-color: transparent
+    }
+    50% {
+      border-color: #FE6C00;
+    }
+  }
+
+  @keyframes off-caret {
+    100% {
+      border-right: none;
+    }
+  }
+}
