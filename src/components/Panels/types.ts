@@ -1,5 +1,5 @@
 export interface IPanels {
-  text?: string;
+  text: string;
   cover?: string;
-  play: boolean;
+  play?: boolean;
 }

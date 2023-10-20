@@ -2,7 +2,6 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import './globals.css';
 
 import { clsx } from 'clsx';
-import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import React, { PropsWithChildren } from 'react';
 import { Header } from "@src/components/Header";
@@ -40,12 +39,6 @@ const neueHaasGrot = localFont({
         },
     ],
 });
-
-
-export const metadata: Metadata = {
-    title: 'Craft Script',
-    description: 'Craft Script',
-};
 
 const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
