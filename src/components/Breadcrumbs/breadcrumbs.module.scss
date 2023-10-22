@@ -1,0 +1,108 @@
+.breadcrumbs {
+  &_btn {
+    padding: 1rem;
+    cursor: pointer;
+
+    &__pointer {
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 50%;
+      background: #FFFFFF;
+    }
+
+    &__name {
+      position: absolute;
+      visibility: hidden;
+      top: 50%;
+      right: calc(50% + 3.5rem);
+      transform: translateY(-50%);
+      color: #FFFFFF;
+      white-space: nowrap;
+      background: #171c1f;
+      padding: 0.1rem 0.5rem;
+      border-radius: 0.5rem;
+      z-index: 20;
+
+      &:not(.active).animate {
+        animation: name 200ms ease-out forwards;
+        animation-delay: 150ms;
+      }
+
+      &.active {
+        visibility: visible;
+      }
+    }
+
+    &__line {
+      position: absolute;
+      visibility: hidden;
+      width: 1.5rem;
+      height: 0.1rem;
+      background: #FFFFFF;
+      top: 50%;
+      left: -1.75rem;
+      transform: translateY(-50%);
+
+      &:not(.active).animate {
+        animation: line 100ms linear forwards;
+      }
+
+      &.active {
+        visibility: visible;
+        width: 0.75rem;
+      }
+    }
+
+    &:not(.active):hover {
+      &:after {
+        content: "";
+        position: absolute;
+        padding: 0.4rem;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 0.1rem solid #FFFFFF;
+        border-radius: 50%;
+        background: #171c1f;
+      }
+    }
+
+    &.active {
+      &:after {
+        content: "";
+        position: absolute;
+        padding: 1rem;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 0.1rem solid #FE6C00;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  @keyframes name {
+    0% {
+      right: calc(50% + 3rem);
+      visibility: visible;
+      opacity: 0;
+    }
+    100% {
+      right: calc(50% + 3.5rem);
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  @keyframes line {
+    0% {
+      left: -1.5rem;
+      visibility: visible;
+    }
+    100% {
+      left: -1.75rem;
+      visibility: visible;
+    }
+  }
+}
+
+
