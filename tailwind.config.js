@@ -111,6 +111,11 @@ module.exports = {
                 serif: ['var(--font-neue-haas-grot)'],
                 mono: ['var(--font-kode-mono)'],
             },
+            backgroundImage: {
+                "main-page": "url('/img/main-page-bg.png')",
+                "about-page": "url('/img/craft-page-bg.png')",
+                "cases-page": "url('/img/tech-page-bg.png')",
+            },
         },
     },
 
