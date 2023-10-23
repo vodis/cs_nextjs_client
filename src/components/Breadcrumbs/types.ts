@@ -1,9 +1,6 @@
+import { INavigations } from "@src/constants/navigations";
+
 export interface IBreadcrumbs {
     navigations: INavigations[];
     onNavigate?: () => void;
-}
-
-export interface INavigations {
-    name: string;
-    url: string;
 }

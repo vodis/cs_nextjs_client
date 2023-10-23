@@ -7,6 +7,7 @@ import React, { PropsWithChildren } from 'react';
 import { Header } from "@src/components/Header";
 import { Footer } from "@src/components/Footer";
 import Menu from "@src/components/Menu";
+import DynamicBg from "@src/components/DynamicBg";
 
 const aeonikFono = localFont({
     variable: '--font-aeonik-fono',
@@ -55,6 +56,7 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
             <Header>
                 <Menu/>
             </Header>
+            <DynamicBg />
             {children}
             <Footer/>
         </main>

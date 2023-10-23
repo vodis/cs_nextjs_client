@@ -5,30 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import LoaderNext from "@src/assets/icons/loader-next.svg";
 import Breadcrumbs from "@src/components/Breadcrumbs";
-import { IBreadcrumbs } from "@src/components/Breadcrumbs/types";
-
-const Navigations: IBreadcrumbs['navigations'] = [
-    {
-        name: "Home",
-        url: "/",
-    },
-    {
-        name: "About CraftScript",
-        url: "/about",
-    },
-    {
-        name: "Real use cases",
-        url: "/use-cases",
-    },
-    {
-        name: "Developers",
-        url: "/developers",
-    },
-    {
-        name: "Community",
-        url: "/community",
-    }
-];
+import { NAVIGATIONS } from "@src/constants/navigations";
 
 export const Footer: React.FC = () => {
     return (
@@ -39,7 +16,7 @@ export const Footer: React.FC = () => {
                 </div>
                 <div className="absolute bottom-4 hidden w-10 md:block md:left-[calc(50%-2rem)] md:w-16"><LoaderNext className="w-10 lg:w-14"/></div>
                 <div className="flex items-center justify-center col-start-4 col-start-4 md:col-start-7 md:col-end-7">
-                    <Breadcrumbs navigations={Navigations} />
+                    <Breadcrumbs navigations={NAVIGATIONS} />
                 </div>
             </div>
         </footer>
