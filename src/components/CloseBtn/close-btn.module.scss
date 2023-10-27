@@ -1,0 +1,35 @@
+.close {
+  display: block;
+  &-btn {
+    cursor: pointer;
+    position: relative;
+
+    &_line__first {
+      -webkit-transform: rotate(45deg) matrix(1, 0, 2, 1, 3, 4);
+      transform: rotate(45deg) matrix(1, 0, 2, 1, 3, 4);
+      transition: transform .3s, -webkit-transform .3s;
+      opacity: 0;
+      animation: vision ease-in forwards;
+      animation-delay: .3s;
+    }
+    &_line__last {
+      -webkit-transform: rotate(-45deg) matrix(1, 0, -2, 1, 4, -3);
+      transform: rotate(-45deg) matrix(1, 0, -2, 1, 4, -3);
+      transition: transform .3s, -webkit-transform .3s;
+      opacity: 0;
+      animation: vision ease-in forwards;
+      animation-delay: .3s;
+    }
+  }
+
+  @keyframes vision {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: .5;
+    }
+  }
+}
+
+
