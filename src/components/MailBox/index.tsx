@@ -45,11 +45,11 @@ const MailBox: React.FC = () => {
                 )
             }
             <div className={clsx(
-                "fixed top-0 left-0 w-full h-full z-10 bg-gradient-to-r from-gray-30 to-white",
+                "fixed top-0 left-0 w-full h-full z-10 bg-gradient-to-r from-gray-30 to-white overflow-y-auto",
                 `${styles["mail-box"]}`,
                 isOpen && `${styles["open"]}`
             )}>
-                <div className="flex justify-center items-center h-full flex-col mx-10 md:mx-0">
+                <div className="flex justify-center items-center h-full flex-col mx-10 md:mx-0 mt-20 mb-10 md:my-0">
                     <h3 className="text-center text-2xl md:text-4xl lg:text-6xl mb-12 uppercase">Let's discuss your thoughts</h3>
                     <Formik initialValues={initialValues} onSubmit={onSubmit}>
                         {({ values, isSubmitting, setFieldValue, handleChange, handleBlur, handleSubmit, isValid, errors, touched }) => (
