@@ -35,6 +35,19 @@
       }
     }
   }
+
+  &-box {
+    transform: translateX(100%);
+    transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
+    will-change: transform;
+    padding: 7rem 4rem;
+
+    &.open {
+      transform: translateX(0);
+      transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
+      will-change: transform;
+    }
+  }
 }
 
 

@@ -11,7 +11,7 @@ const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
             <div className="hidden lg:block">
-                <Panels text={"future".toUpperCase()} />
+                <Panels text={"Vision".toUpperCase()} />
             </div>
             <div className="z-10 w-full max-h-[calc(100vh-8rem)] flex-grow max-auto overflow-auto">
                {children}
