@@ -16,6 +16,8 @@ const MailBox: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const featureDisabled = true;
+
     const initialValues = {
         name: "",
         eMail: "",
@@ -34,26 +36,26 @@ const MailBox: React.FC = () => {
 
     return (
         <div className="mail-box">
-            <button onClick={handleOpen} className="text-orange uppercase text-xs md:text-2xl">Get in touch</button>
-            {
-                isOpen && (
-                    <div className="fixed top-0 left-0 z-20 min-w-full grid grid-cols-4 md:grid-cols-7">
-                        <div className="flex items-center justify-center h-16 col-start-4 col-end-4 md:col-start-7 md:col-end-7">
-                            <CloseBtn onClose={handleOpen} className="w-10 md:w-14" />
-                        </div>
-                    </div>
-                )
-            }
+            <button onClick={handleOpen} disabled={featureDisabled} className="text-orange uppercase text-xs md:text-2xl disabled:text-gray-60">Get in touch</button>
             <div className={clsx(
-                "fixed top-0 left-0 w-full h-full z-10 bg-gradient-to-r from-gray-30 to-white overflow-y-auto",
+                "fixed top-0 left-0 w-full md:w-4/6 lg:w-3/6 xl:w-2/6 h-full z-20 bg-gradient-to-r from-gray-30 to-white overflow-y-auto",
                 `${styles["mail-box"]}`,
                 isOpen && `${styles["open"]}`
             )}>
                 <div className="flex justify-center items-center h-full flex-col mx-10 md:mx-0 mt-20 mb-10 md:my-0">
-                    <h3 className="text-center text-2xl md:text-4xl lg:text-6xl mb-12 uppercase">Let's discuss your thoughts</h3>
+                    {
+                        isOpen && (
+                            <div className="fixed top-0 left-0 z-20 min-w-full grid grid-cols-4 md:grid-cols-7">
+                                <div className="flex items-center justify-center h-16 col-start-4 col-end-4 md:col-start-7 md:col-end-7">
+                                    <CloseBtn onClose={handleOpen} className="w-8 md:w-10" />
+                                </div>
+                            </div>
+                        )
+                    }
+                    <h3 className="text-center text-xl md:text-2xl mb-12 uppercase">Let's discuss your thoughts</h3>
                     <Formik initialValues={initialValues} onSubmit={onSubmit}>
                         {({ values, isSubmitting, setFieldValue, handleChange, handleBlur, handleSubmit, isValid, errors, touched }) => (
-                            <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center w-full sm:w-80 md:w-1/3 lg:w-1/4">
+                            <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center w-full sm:w-80">
                                 <label htmlFor="input-group-1"
                                        className="self-start block mb-2 text-sm font-medium text-black">Your Name</label>
                                 <div className="relative mb-6 w-full">
