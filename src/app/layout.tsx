@@ -1,9 +1,10 @@
 import 'react-toastify/dist/ReactToastify.min.css';
 import './globals.css';
 
+import React, { PropsWithChildren } from 'react';
+import Provider from "@src/providers/provider";
 import { clsx } from 'clsx';
 import localFont from 'next/font/local';
-import React, { PropsWithChildren } from 'react';
 import { Header } from "@src/components/Header";
 import { Footer } from "@src/components/Footer";
 import Menu from "@src/components/Menu";
@@ -53,12 +54,14 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
             )}
         >
         <main className="h-full flex flex-1 flex-col bg-black">
-            <Header>
-                <Menu/>
-            </Header>
-            <DynamicBg />
-            {children}
-            <Footer/>
+            <Provider>
+                <Header>
+                    <Menu/>
+                </Header>
+                <DynamicBg />
+                {children}
+                <Footer/>
+            </Provider>
         </main>
         </body>
         </html>
