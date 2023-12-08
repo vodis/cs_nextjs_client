@@ -1,14 +1,18 @@
-import 'react-toastify/dist/ReactToastify.min.css';
-import './globals.css';
+'use client';
 
 import React, { PropsWithChildren } from 'react';
-import Provider from "@src/providers/provider";
 import { clsx } from 'clsx';
-import localFont from 'next/font/local';
+import Providers from "@src/providers/providers";
 import { Header } from "@src/components/Header";
 import { Footer } from "@src/components/Footer";
 import Menu from "@src/components/Menu";
 import DynamicBg from "@src/components/DynamicBg";
+
+import localFont from 'next/font/local';
+import 'react-toastify/dist/ReactToastify.min.css';
+import './globals.css';
+
+import '@src/api/api';
 
 const aeonikFono = localFont({
     variable: '--font-aeonik-fono',
@@ -54,14 +58,14 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
             )}
         >
         <main className="h-full flex flex-1 flex-col bg-black">
-            <Provider>
+            <Providers>
                 <Header>
                     <Menu/>
                 </Header>
                 <DynamicBg />
                 {children}
                 <Footer/>
-            </Provider>
+            </Providers>
         </main>
         </body>
         </html>

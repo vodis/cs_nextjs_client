@@ -1,6 +1,6 @@
-import React, {PropsWithChildren, useState} from "react";
+import React, { PropsWithChildren } from "react";
 import Panels from "@src/components/Panels";
-import {Metadata} from "next";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: 'CraftScript | Easy discovering of Web3 world together | DEX in your hands',
