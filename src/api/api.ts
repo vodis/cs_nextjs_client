@@ -7,6 +7,7 @@ axios.defaults.withCredentials = true;
 axios.interceptors.request.use(
     (config) => {
         config.headers.Authorization = Cookies.get('auth-token') || '';
+        config.headers['Access-Control-Allow-Origin'] = '*';
         return config;
     },
 );
