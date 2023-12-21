@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Translate from "@vodis/ui-kit/i18n/Translate";
 import styles from './breadcrumbs.module.scss';
 import { IBreadcrumbs } from "./types";
 import clsx from "clsx";
@@ -55,7 +56,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
                                         'hidden md:block'
                                     )}
                                 >
-                                    {link.name}
+                                    <Translate translationKey={link.name} />
                                 </span>
                             <div
                                 className={clsx(

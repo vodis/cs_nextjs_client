@@ -1,6 +1,4 @@
 import React from "react";
-import AnimateTitle from "@src/components/AnimateTitle";
-import AnimateText from "@src/components/AnimateText";
 
 const AboutPage: React.FC = () => {
     return (

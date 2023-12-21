@@ -3,13 +3,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { ILanguage } from "@src/types/entities/language";
+import { defaultTranslations } from "@src/stores/reducers/i18n/default";
 
 interface II18nState extends ILanguage {
     activeLanguage: string;
 }
 
 const initialState: II18nState = {
-    translations: {},
+    translations: defaultTranslations,
     languages: {
         EN: {
             language: 'English',
