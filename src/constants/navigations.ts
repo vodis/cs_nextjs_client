@@ -6,26 +6,26 @@ export interface INavigations {
 
 export const NAVIGATIONS: INavigations[] = [
     {
-        name: "Home",
+        name: "Texts.bread-crumbs-label-home",
         url: "/",
         bg: "bg-main-page",
     },
     {
-        name: "About CraftScript",
+        name: "Texts.bread-crumbs-label-about",
         url: "/about",
         bg: "bg-about-page",
     },
     {
-        name: "Real use cases",
+        name: "Texts.bread-crumbs-label-cases",
         url: "/use-cases",
         bg: "bg-cases-page",
     },
     {
-        name: "Developers",
+        name: "Texts.bread-crumbs-label-developers",
         url: "/developers",
     },
     {
-        name: "Community",
+        name: "Texts.bread-crumbs-label-community",
         url: "/community",
     }
 ];

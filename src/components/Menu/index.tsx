@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react'
-import { IMenu } from "@src/components/Menu/types"
-import styles from './menu.module.scss'
+import React, { useState } from 'react';
+import { IMenu } from "@src/components/Menu/types";
+import Translate from "@vodis/ui-kit/i18n/Translate";
+import styles from './menu.module.scss';
 import { clsx } from "clsx";
 import CloseBtn from "@src/components/CloseBtn";
 import Languages from "@src/components/Languages";
 
 const Menu: React.FC<IMenu> = (props) => {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleOpen = () => {
         setIsOpen(!isOpen)
@@ -43,10 +44,10 @@ const Menu: React.FC<IMenu> = (props) => {
                 }
                 <ul className="flex flex-col gap-8">
                     <li className="mr-6">
-                        <a className="text-xl hover:text-orange uppercase" href="/">Home</a>
+                        <a className="text-xl hover:text-orange uppercase" href="/"><Translate translationKey="Texts.side-menu-home" /></a>
                     </li>
                     <li className="mr-6">
-                        <a className="text-xl hover:text-orange uppercase" href="/use-cases">Products</a>
+                        <a className="text-xl hover:text-orange uppercase" href="/use-cases"><Translate translationKey="Texts.side-menu-products" /></a>
                     </li>
                 </ul>
                 <Languages />

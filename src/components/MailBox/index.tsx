@@ -1,7 +1,8 @@
 'use client';
 
-import React, {useState} from 'react';
-import {Formik, FormikValues} from "formik";
+import React, { useState } from 'react';
+import { Formik, FormikValues } from "formik";
+import Translate from "@vodis/ui-kit/i18n/Translate";
 import clsx from "clsx";
 import styles from "./mail-box.module.scss";
 import SpinnerIcon from "@src/assets/icons/spinner.svg";
@@ -36,7 +37,7 @@ const MailBox: React.FC = () => {
 
     return (
         <div className="mail-box">
-            <button onClick={handleOpen} disabled={featureDisabled} className="text-orange uppercase text-xs md:text-2xl disabled:text-gray-60">Get in touch</button>
+            <button onClick={handleOpen} disabled={featureDisabled} className="text-orange uppercase text-xs md:text-2xl disabled:text-gray-60"><Translate translationKey="Texts.header-put-through" /></button>
             <div className={clsx(
                 "fixed top-0 left-0 w-full md:w-4/6 lg:w-3/6 xl:w-2/6 h-full z-20 bg-gradient-to-r from-gray-30 to-white overflow-y-auto",
                 `${styles["mail-box"]}`,

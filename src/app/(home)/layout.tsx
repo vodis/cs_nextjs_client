@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
-import Panels from "@src/components/Panels";
-import { Metadata } from "next";
+import type { Metadata } from 'next';
+
+import { PanelWithTranslations } from "@src/components/Panels/PanelsWithTranslations";
 
 export const metadata: Metadata = {
     title: 'CraftScript | Easy discovering of Web3 world together | DEX in your hands',
@@ -11,7 +12,7 @@ const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
             <div className="hidden lg:block">
-                <Panels text={"Vision".toUpperCase()} />
+                <PanelWithTranslations text="Texts.panels-text-home" />
             </div>
             <div className="z-10 w-full max-h-[calc(100vh-8rem)] flex-grow max-auto overflow-auto">
                {children}
