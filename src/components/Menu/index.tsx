@@ -29,7 +29,7 @@ const Menu: React.FC<IMenu> = (props) => {
                 </div>
             </div>
             <div className={clsx(
-                "fixed flex flex-col justify-between top-0 right-0 w-full md:w-4/6 lg:w-3/6 xl:w-2/6 h-full z-10 bg-gradient-to-r from-gray-30 to-white overflow-y-auto",
+                "fixed flex flex-col justify-between top-0 right-0 w-full pt-24 pb-10 px-6 md:py-28 md:px-16 md:w-4/6 lg:w-3/6 xl:w-2/6 h-full z-10 bg-gradient-to-r from-gray-30 to-white overflow-y-auto",
                 `${styles["menu-box"]}`,
                 isOpen && `${styles["open"]}`
             )}>
@@ -42,7 +42,7 @@ const Menu: React.FC<IMenu> = (props) => {
                         </div>
                     )
                 }
-                <ul className="flex flex-col gap-8">
+                <ul className="flex flex-col gap-4 md:gap-8">
                     <li className="mr-6">
                         <a className="text-xl hover:text-orange uppercase" href="/"><Translate translationKey="Texts.side-menu-home" /></a>
                     </li>
