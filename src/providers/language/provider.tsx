@@ -18,7 +18,7 @@ const LanguageProvider = ({ children }: React.PropsWithChildren) => {
     }, [dispatch, language, isFetched]);
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>...</div>}>
             { children }
         </Suspense>
     );
