@@ -28,7 +28,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
         <div className="flex items-center justify-center w-full h-full relative">
             {activeUrlName &&
                 <div className="md:hidden absolute text-white -rotate-90 left-1/2 -translate-x-2/4 bottom-64 whitespace-nowrap">
-                    { activeUrlName }
+                    <Translate translationKey={activeUrlName} />
                 </div>
             }
             <div className="absolute bottom-0 flex flex-col">
