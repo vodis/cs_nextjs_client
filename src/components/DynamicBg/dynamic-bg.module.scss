@@ -1,0 +1,14 @@
+.dynamic-bg {
+  animation: bg 2000ms linear forwards;
+
+  @keyframes bg {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+}
+
+

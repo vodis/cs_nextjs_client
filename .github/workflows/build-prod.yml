@@ -1,0 +1,26 @@
+name: Build PROD - Frontend
+
+on:
+  push:
+    branches:
+      - "master"
+    paths-ignore:
+      - "README.md"
+
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-frontend-ci:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
