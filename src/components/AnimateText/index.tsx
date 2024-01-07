@@ -20,7 +20,7 @@ const AnimateText: React.FC<IAnimateText> = ({ text, dedicatedWordIndexes= [], t
     }, []);
     return (
         <div className={`${styles['animate-text']}`} style={{ animationDelay: transitionDelay }}>
-            <span className="text-white text-[.9rem] tracking-wide md:text-2xl md:tracking-[.2rem] lg:text-4xl">
+            <span className="text-white text-[.9rem] tracking-wide md:text-xl md:tracking-[.2rem] lg:text-2xl">
                 {text.split(" ").map((word, i, arr) => {
                     const separateFromSigns = word.split(breakpoint);
                     return (

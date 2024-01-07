@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { PanelWithTranslations } from "@src/components/Panels/PanelsWithTranslations";
 
 export const metadata: Metadata = {
-    title: 'CraftScript | Easy discovering of Web3 world together | DEX in your hands',
+    title: 'CraftScript | Easy discovering of Web3 world together | DeFi and Dex in your hands',
     description: 'Our aim is creating smart scripts in any smart contract programming languages and reach to the best market results in a world. Join to Craft Script team and participate in development at open source solutions.',
 };
 
