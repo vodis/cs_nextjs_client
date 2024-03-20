@@ -18,7 +18,7 @@ const DynamicBg: React.FC = () => {
 
     return (
         <div className={clsx(
-            "fixed w-full h-full z-[1] bg-right-bottom",
+            "fixed w-full h-full z-[1] bg-right-bottom bg-cover bg-left md:bg-center",
             `${styles['dynamic-bg']}`,
             bg && bg,
         )}></div>

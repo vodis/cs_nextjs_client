@@ -1,5 +1,7 @@
 .dynamic-bg {
   animation: bg 2000ms linear forwards;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
 
   @keyframes bg {
     0% {

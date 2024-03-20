@@ -20,7 +20,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
 
     useEffect(() => {
         const findUrlByIndex = props.navigations.findIndex((link) => link.url === pathname);
-        setActiveUrlName(props.navigations[findUrlByIndex].name);
+        setActiveUrlName(props.navigations[findUrlByIndex]?.name);
         return () => {};
     }, [pathname, props.navigations])
 
@@ -35,7 +35,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
                 {props.navigations.map((link, index) => {
                     return (
                         <button
-                            key={link.name}
+                            key={link?.name}
                             onClick={(e) => handleNavigate(e, link.url)}
                             onMouseEnter={() => setAnimate(index)}
                             onMouseLeave={() => setAnimate(null)}
@@ -56,7 +56,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
                                         'hidden md:block'
                                     )}
                                 >
-                                    <Translate translationKey={link.name} />
+                                    <Translate translationKey={link?.name} />
                                 </span>
                             <div
                                 className={clsx(

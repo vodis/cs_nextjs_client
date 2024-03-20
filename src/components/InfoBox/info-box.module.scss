@@ -1,0 +1,35 @@
+.info-box {
+  &_img-container {
+    width: 99%;
+    position: relative;
+    overflow: hidden;
+
+    &:before {
+      content: "";
+      display: block;
+      padding-top: 99%;
+    }
+
+    &__mobile {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+
+      &:before {
+        content: "";
+        display: block;
+        padding-top: 40%;
+      }
+    }
+  }
+
+  &_content__mobile {
+    & h2 {
+      padding: 0 1rem;
+    }
+    & p {
+      padding-left: 1rem;
+      padding-right: 4rem;
+    }
+  }
+}
