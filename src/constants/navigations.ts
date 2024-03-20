@@ -21,11 +21,8 @@ export const NAVIGATIONS: INavigations[] = [
         bg: "bg-cases-page",
     },
     {
-        name: "Texts.bread-crumbs-label-developers",
-        url: "/developers",
-    },
-    {
-        name: "Texts.bread-crumbs-label-community",
-        url: "/community",
+        name: "Texts.bread-crumbs-label-ai",
+        url: "/ai",
+        bg: "bg-ai-page",
     }
 ];
