@@ -112,10 +112,10 @@ module.exports = {
                 mono: ['var(--font-kode-mono)'],
             },
             backgroundImage: {
-                "main-page": "url('/img/main-page-bg.png')",
-                "about-page": "url('/img/craft-page-bg.png')",
-                "cases-page": "url('/img/tech-page-bg.png')",
-                "ai-page": "url('/img/ai-page-bg.jpg')"
+                "main-page": "url('/images/home/main-page-bg.png')",
+                "about-page": "url('/images/craft-page-bg.png')",
+                "cases-page": "url('/images/tech-page-bg.png')",
+                "ai-page": "url('/images/ai-page-bg.jpg')"
             },
         },
     },

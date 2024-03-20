@@ -2,7 +2,7 @@ import {InfoBox} from "@src/components/InfoBox";
 
 const ContentCMSSystems = () => {
     return (
-        <InfoBox img="/img/home_cms_systems_card.jpg" title="CMS Systems">
+        <InfoBox img="/images/home/home_cms_systems_card.jpg" title="CMS Systems">
             <section className="flex flex-col gap-2">
                 <h2 className="mt-10 mb-5 text-xl tracking-wide uppercase text-orange">Custom CMS Systems</h2>
                 <p>Transform your digital presence with CraftScript's bespoke Content Management System (CMS) solutions. As pioneers in the field of web3 technologies, CraftScript specializes in developing modular and scalable CMS systems tailored to meet the unique needs of your business.</p>

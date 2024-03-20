@@ -2,7 +2,7 @@ import {InfoBox} from "@src/components/InfoBox";
 
 const ContentModularitySystems = () => {
     return (
-        <InfoBox img="/img/home_modularity_systems_card.png" title="Modularity Systems" imgPosition="right">
+        <InfoBox img="/images/home/home_modularity_systems_card.png" title="Modularity Systems" imgPosition="right">
             <section className="flex flex-col gap-2">
                 <h2 className="mt-10 mb-5 text-xl tracking-wide uppercase text-orange">Modularity Systems for Seamless Integration</h2>
                 <p>CraftScript offers cutting-edge modularity systems designed to streamline integration processes and enhance the flexibility of your software infrastructure. As a frontrunner in web3 development, we specialize in delivering modular solutions that adapt to the evolving needs of your business.</p>
