@@ -2,7 +2,7 @@ import {InfoBox} from "@src/components/InfoBox";
 
 const ContentSoftwareProcesses = () => {
     return (
-        <InfoBox img="/img/home_software_processes_card.png" title="Software Development Processes">
+        <InfoBox img="/images/home/home_software_processes_card.png" title="Software Development Processes">
             <section className="flex flex-col gap-2">
                 <h2 className="mt-10 mb-5 text-xl tracking-wide uppercase text-orange">Streamlined Software Development Processes</h2>
                 <p>At CraftScript, we uphold a commitment to excellence in software development processes, ensuring the delivery of high-quality solutions that exceed client expectations. Our approach is rooted in agile methodologies, enabling us to adapt to changing requirements and deliver value iteratively.</p>

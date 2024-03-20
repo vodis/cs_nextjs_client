@@ -2,7 +2,7 @@ import {InfoBox} from "@src/components/InfoBox";
 
 const ContentDeFiSystems = () => {
     return (
-        <InfoBox img="/img/home_defi_systems_card.png" title="DeFi Systems" imgPosition="right">
+        <InfoBox img="/images/home/home_defi_systems_card.png" title="DeFi Systems" imgPosition="right">
             <section className="flex flex-col gap-2">
                 <h2 className="mt-10 mb-5 text-xl tracking-wide uppercase text-orange">Unlocking the Potential of DeFi</h2>
                 <p>Embark on a journey into the decentralized finance (DeFi) landscape with CraftScript's innovative solutions powered by Ethereum and other cutting-edge technologies. As pioneers in the realm of web3 development, we specialize in creating decentralized financial systems that redefine traditional finance.</p>
