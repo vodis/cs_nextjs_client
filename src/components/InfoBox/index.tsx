@@ -20,7 +20,12 @@ export const InfoBox: React.FC<IInfoBox> = ({ img, title , imgPosition= 'left', 
                         {img && <Image src={img} alt={title} fill style={{ objectFit:"cover" }} />}
                     </div>
                 </div>
-                <div className={clsx(`${styles['info-box_content__mobile']}`, "w-full text-white")}>
+                <div className="lg:hidden">
+                    <div className={clsx(`${styles['info-box_content__mobile']}`, "w-full text-white")}>
+                        {children}
+                    </div>
+                </div>
+                <div className="hidden lg:block w-full text-white px-6">
                     {children}
                 </div>
             </div>
