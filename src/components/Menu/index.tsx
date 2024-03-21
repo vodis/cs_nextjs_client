@@ -50,6 +50,12 @@ const Menu: React.FC<IMenu> = (props) => {
                         <a className="text-xl hover:text-orange uppercase" href="/use-cases"><Translate translationKey="Texts.side-menu-products" /></a>
                     </li>
                     <li className="mr-6">
+                        <a className="text-xl hover:text-orange uppercase" href="/ai"><Translate translationKey="Texts.side-menu-ai" /></a>
+                    </li>
+                    <li className="mr-6">
+                        <a className="text-xl hover:text-orange uppercase" href="/about"><Translate translationKey="Texts.side-menu-about" /></a>
+                    </li>
+                    <li className="mr-6">
                         <a className="text-xl hover:text-orange uppercase" href={process.env.NEXT_PUBLIC_DOCS_URL}><Translate translationKey="Texts.side-menu-docs" /></a>
                     </li>
                 </ul>
