@@ -56,7 +56,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
                                         'hidden md:block'
                                     )}
                                 >
-                                    <Translate translationKey={link?.name} />
+                                    <Translate translationKey={link?.name ?? ''} />
                                 </span>
                             <div
                                 className={clsx(

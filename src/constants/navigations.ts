@@ -11,11 +11,6 @@ export const NAVIGATIONS: INavigations[] = [
         bg: "bg-main-page",
     },
     {
-        name: "Texts.bread-crumbs-label-about",
-        url: "/about",
-        bg: "bg-about-page",
-    },
-    {
         name: "Texts.bread-crumbs-label-cases",
         url: "/use-cases",
         bg: "bg-cases-page",
@@ -24,5 +19,10 @@ export const NAVIGATIONS: INavigations[] = [
         name: "Texts.bread-crumbs-label-ai",
         url: "/ai",
         bg: "bg-ai-page",
-    }
+    },
+    {
+        name: "Texts.bread-crumbs-label-about",
+        url: "/about",
+        bg: "bg-about-page",
+    },
 ];

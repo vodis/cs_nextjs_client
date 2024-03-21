@@ -8,11 +8,11 @@ export const metadata: Metadata = {
     description: 'Discover CraftScript\'s innovative projects in Web3, DeFi, Dex, and AI realms, including an end-to-end platform facilitating alternative asset investing, a decentralized insurance platform like BridgeMutual, and a DeFi platform enabling composable leverage and lending solutions. Explore the future of finance and technology with CraftScript.',
 };
 
-const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
+const UseCasesLayout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
             <div className="hidden lg:block">
-                <PanelWithTranslations text="Product" />
+                <PanelWithTranslations text={"Product".toUpperCase()} />
             </div>
             <div className="z-10 w-full max-h-[calc(100vh-8rem)] flex-grow max-auto overflow-auto">
                {children}
@@ -21,4 +21,4 @@ const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
     );
 }
 
-export default HomeLayout;
+export default UseCasesLayout;
