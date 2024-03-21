@@ -44,3 +44,25 @@ button:focus {
 .Toastify__toast-icon {
     @apply flex shrink-0 w-[24px] m-0
 }
+
+.swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 300px;
+    height: 300px;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+}
+
+.carousel > .swiper > .swiper-pagination > .swiper-pagination-bullet-active {
+    background: #FE6C00;
+}
