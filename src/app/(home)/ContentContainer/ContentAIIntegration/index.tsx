@@ -1,8 +1,9 @@
 import {InfoBox} from "@src/components/InfoBox";
+import homeAiIntegrationCard from "@public/images/home/home_ai_integration_card.png";
 
 const ContentAIIntegration = () => {
     return (
-        <InfoBox img="/images/home/home-ai-integration-card.png" title="Content AI">
+        <InfoBox img={homeAiIntegrationCard} title="Content AI">
             <section className="flex flex-col gap-2">
                 <h2 className="mt-10 mb-5 text-xl tracking-wide uppercase text-orange">AI Integration Solutions</h2>
                 <p>Empower your business with cutting-edge AI integration solutions from CraftScript, the leading IT company in the realm of software innovation. Our AI integration services seamlessly incorporate advanced machine learning algorithms and natural language processing capabilities into your existing systems.</p>
