@@ -28,8 +28,12 @@ export const i18nSlice = createSlice({
             state.languages = action.payload.languages;
             state.translations = action.payload.translations;
         },
+        setActiveLanguage: (state, action: PayloadAction<string>) => {
+             Cookies.set('active-language', action.payload, { expires: 31, path: '/'});
+            state.activeLanguage = action.payload;
+        },
     },
 });
 
-export const { setLanguagesAndTranslations } = i18nSlice.actions;
+export const { setLanguagesAndTranslations, setActiveLanguage } = i18nSlice.actions;
 export default i18nSlice.reducer;

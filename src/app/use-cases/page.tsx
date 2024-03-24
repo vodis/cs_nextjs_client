@@ -36,7 +36,7 @@ const UseCasesPage: React.FC = () => {
         <div className="h-full grid grid-cols-4 mx-auto md:grid-cols-7">
             <section className="flex items-start justify-center ml-16 md:ml-0 col-start-1 col-end-5 md:col-start-3 md:col-end-6">
                 <div className="mt-10 md:mt-[25rem] mb-10 w-full">
-                    <AnimateTitle title={translate(translations, 'Related Cases')} />
+                    <AnimateTitle title={translate(translations, 'Texts.animate-label-use-cases')} />
                     <div className="mt-4 h-[9rem]">
                         {products[currentSlide].flyComponent}
                     </div>
