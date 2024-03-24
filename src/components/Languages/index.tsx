@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import { useUpdateLanguage } from "@src/api/language/useUpdateLanguage";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLanguagesAndTranslations } from "@src/stores/actions/i18n/action";
+import {updateLanguagesAndTranslations, updateActiveLanguage} from "@src/stores/actions/i18n/action";
 import { clsx } from "clsx";
 
 const Languages: React.FC = () => {
@@ -24,8 +24,9 @@ const Languages: React.FC = () => {
     useEffect(() => {
         if (isSuccess && !!language) {
             dispatch(updateLanguagesAndTranslations(language));
+            dispatch(updateActiveLanguage(selectedLanguage || "EN"));
         }
-    }, [dispatch, language, isSuccess]);
+    }, [dispatch, language, isSuccess, selectedLanguage]);
 
     return (
         <div className="flex flex-col gap-2" onClick={handleClick}>

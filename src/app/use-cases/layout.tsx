@@ -12,7 +12,7 @@ const UseCasesLayout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
             <div className="hidden lg:block">
-                <PanelWithTranslations text={"Product".toUpperCase()} />
+                <PanelWithTranslations text="Texts.panels-text-use-cases" />
             </div>
             <div className="z-10 w-full max-h-[calc(100vh-8rem)] flex-grow max-auto overflow-auto">
                {children}
