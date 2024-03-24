@@ -12,7 +12,7 @@ const AILayout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
             <div className="hidden lg:block">
-                <PanelWithTranslations text={"AI".toUpperCase()} />
+                <PanelWithTranslations text={"Texts.panels-text-ai"} />
             </div>
             <div className="z-10 w-full max-h-[calc(100vh-8rem)] flex-grow max-auto overflow-auto">
                {children}

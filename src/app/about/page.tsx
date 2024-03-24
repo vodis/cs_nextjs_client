@@ -27,7 +27,7 @@ const AboutPage: React.FC = () => {
                 </div>
             </div>
             <section className="flex items-start justify-center flex-col gap-10 col-start-2 col-end-5 md:col-start-3 md:col-end-6">
-                <AnimateTitle title={translate(translations, 'Leadership')} />
+                <AnimateTitle title={translate(translations, 'Texts.animate-label-about')} />
                 <div className="lg:hidden w-full">
                     <LeaderCard {...team[0]} isMobile={true} />
                 </div>
