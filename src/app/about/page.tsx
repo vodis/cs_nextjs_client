@@ -14,7 +14,7 @@ const AboutPage: React.FC = () => {
         {
             fullName: 'Dmytro Voitenko',
             position: ['Founder', 'Senior Full Stack Developer'],
-            in: 'https://www.linkedin.com/in/dima-voitenko-82871a145/',
+            in: 'https://www.linkedin.com/in/dmytro-voitenko-82871a145/',
             avatar: '/images/about/leader_1.png',
         },
     ];
