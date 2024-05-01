@@ -51,8 +51,9 @@ const FormUploadField = ({ setFieldValue, values }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'application/pdf': [],
-      'application/msword': [],
-      'application/vnd.ms-excel': [],
+      'text/xml': [],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        [],
     },
     onDrop: (acceptedFiles) => {
       setFieldValue('file', acceptedFiles);
