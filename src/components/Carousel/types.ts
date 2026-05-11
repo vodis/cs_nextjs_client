@@ -1,12 +1,12 @@
-import {Swiper as SwiperClass} from "swiper/types";
+import { Swiper as SwiperClass } from 'swiper/types';
 
 export interface ICarousel {
-    srcs: ISrcs[];
-    isMobile?: boolean;
-    onSlideChange: (e: SwiperClass) => void
+  srcs: ISrcs[];
+  isMobile?: boolean;
+  onSlideChange: (e: SwiperClass) => void;
 }
 
 interface ISrcs {
-    title: string;
-    img?: string;
+  title: string;
+  img?: string;
 }

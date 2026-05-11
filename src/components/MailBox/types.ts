@@ -1,2 +1,1 @@
-export interface IMailBox {
-}
+export interface IMailBox {}

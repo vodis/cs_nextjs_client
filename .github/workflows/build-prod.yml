@@ -3,9 +3,9 @@ name: Build PROD - Frontend
 on:
   push:
     branches:
-      - "master"
+      - 'master'
     paths-ignore:
-      - "README.md"
+      - 'README.md'
 
   workflow_dispatch:
 
