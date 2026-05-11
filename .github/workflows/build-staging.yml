@@ -3,9 +3,9 @@
 #
 # Produces: immutable image digest (GHCR), SBOM, scan summary, deploy-metadata.json (uploaded as workflow artifacts).
 #
-# @vodis/ui-kit comes from GitHub Packages — auth must target npm.pkg.github.com (not registry.npmjs.org).
-# Optional secret NPM_TOKEN: PAT with read:packages if GITHUB_TOKEN cannot read the package (e.g. other private repos).
-# Optional: enable GitHub Packages for the repo if GHCR push fails (packages: write is granted below).
+# @vodis/ui-kit is on GitHub Packages. Required repo secret NPM_TOKEN: PAT with read:packages for that package.
+# github.token cannot read packages published from another repo — see GitHub Actions “GITHUB_TOKEN” packages docs.
+# packages: write below is for GHCR image push, not for consuming npm packages from other repositories.
 
 name: Build STAGING - Frontend
 
@@ -46,12 +46,12 @@ jobs:
 
       - name: npm auth (@vodis/ui-kit — GitHub Packages)
         run: |
-          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
-          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
-            printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
-          else
-            printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ github.token }}" >> .npmrc
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit). The workflow GITHUB_TOKEN cannot install private packages published from another repository."
+            exit 1
           fi
+          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
 
       - name: Install dependencies
         run: npm ci
