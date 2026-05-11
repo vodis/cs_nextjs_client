@@ -50,7 +50,7 @@ jobs:
           if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
             printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
           else
-            printf '//npm.pkg.github.com/:_authToken=%s\n' "${GITHUB_TOKEN}" >> .npmrc
+            printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ github.token }}" >> .npmrc
           fi
 
       - name: Install dependencies
