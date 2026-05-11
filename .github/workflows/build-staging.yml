@@ -1,0 +1,160 @@
+# Staging / pre-production — orchestrator artifact contract (ORCHESTRATOR_DEPLOYMENT_PIPELINE_CONTRACT.md §5.1).
+# Runs in parallel with build-dev.yml (SFTP deploy). Does NOT replace legacy develop deploy.
+#
+# Produces: immutable image digest (GHCR), SBOM, scan summary, deploy-metadata.json (uploaded as workflow artifacts).
+#
+# Required repo secret for private npm deps: NPM_TOKEN (same as Docker build).
+# Optional: enable GitHub Packages for the repo if GHCR push fails (packages: write is granted below).
+
+name: Staging — orchestrator contract
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+concurrency:
+  group: staging-orchestrator-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SERVICE_NAME: marketing-web
+  ENVIRONMENT: staging
+
+jobs:
+  staging-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d81326679908379441bc # v4.4.0
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: npm auth (@vodis/ui-kit)
+        if: ${{ secrets.NPM_TOKEN != '' }}
+        run: printf '//registry.npmjs.org/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" > .npmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (no write — CI-safe)
+        run: npx eslint --ext .tsx --ext .ts ./ --max-warnings 0
+
+      - name: GHCR image name (lowercase)
+        id: ghcr
+        run: echo "image=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@1dc73863535b631f98b2378be8619f83b136f4a0 # v6.17.0
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.ghcr.outputs.image }}:staging-${{ github.sha }}
+          build-args: |
+            NPM_TOKEN=${{ secrets.NPM_TOKEN }}
+          provenance: true
+          sbom: true
+
+      - name: Pull image for local scanners
+        run: docker pull "${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}"
+
+      - name: Install Syft
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: SBOM (CycloneDX JSON)
+        run: |
+          mkdir -p artifacts
+          syft "${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}" -o cyclonedx-json=artifacts/sbom.cdx.json
+
+      - name: Trivy vulnerability scan (JSON)
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # v0.29.0
+        with:
+          image-ref: "${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}"
+          format: json
+          output: artifacts/scan-summary.json
+          exit-code: "0"
+
+      - name: Write deploy-metadata.json
+        env:
+          SERVICE_NAME: ${{ env.SERVICE_NAME }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          GHCR_IMAGE: ${{ steps.ghcr.outputs.image }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          ACTOR: ${{ github.actor }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir -p artifacts
+          REPO_PATH="${GHCR_IMAGE#ghcr.io/}"
+          export REPO_PATH
+          python3 <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+
+          registry = "ghcr.io"
+          repo_path = os.environ["REPO_PATH"]
+          digest = os.environ["DIGEST"]
+          server = os.environ["SERVER_URL"].rstrip("/")
+          gh_repo = os.environ["REPOSITORY"]
+
+          meta = {
+              "schemaVersion": "1",
+              "service": os.environ["SERVICE_NAME"],
+              "environment": os.environ["ENVIRONMENT"],
+              "git": {
+                  "repository": f"{server}/{gh_repo}.git",
+                  "commitSha": os.environ["SHA"],
+                  "branch": os.environ["REF_NAME"],
+                  "actor": os.environ["ACTOR"],
+              },
+              "image": {
+                  "registry": registry,
+                  "repository": repo_path,
+                  "digest": digest,
+              },
+              "security": {
+                  "sbomUri": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}#artifacts-sbom.cdx.json",
+                  "scanSummaryUri": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}#artifacts-scan-summary.json",
+                  "signatureRef": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}#staging-keyless-signing-when-enabled",
+              },
+              "build": {
+                  "pipelineId": os.environ["RUN_ID"],
+                  "pipelineUrl": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}",
+                  "builtAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              },
+          }
+          with open("artifacts/deploy-metadata.json", "w", encoding="utf-8") as f:
+              json.dump(meta, f, indent=2)
+              f.write("\n")
+          PY
+
+      - name: Upload staging bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: staging-deploy-bundle-${{ github.sha }}
+          path: artifacts/
