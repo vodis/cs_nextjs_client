@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { clsx } from 'clsx';
 
+import { useSelector } from '@src/stores/hooks';
 import { useUpdateLanguage } from '@src/api/language/useUpdateLanguage';
 import {
   updateLanguagesAndTranslations,

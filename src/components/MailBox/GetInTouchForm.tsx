@@ -23,7 +23,14 @@ const MessageSchema = Yup.object().shape({
   file: Yup.array().of(Yup.mixed().required('File is required')),
 });
 
-const FormField = ({ title, error, icon, children }) => {
+type FormFieldProps = {
+  title: string;
+  error?: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+};
+
+const FormField = ({ title, error, icon, children }: FormFieldProps) => {
   return (
     <>
       <div className="flex w-full gap-1 justify-between">
@@ -47,7 +54,12 @@ const FormField = ({ title, error, icon, children }) => {
   );
 };
 
-const FormUploadField = ({ setFieldValue, values }) => {
+type FormUploadFieldProps = {
+  setFieldValue: (field: string, value: unknown) => void;
+  values: FormikValues;
+};
+
+const FormUploadField = ({ setFieldValue, values }: FormUploadFieldProps) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'application/pdf': [],

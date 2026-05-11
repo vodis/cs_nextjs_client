@@ -40,6 +40,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.14.196",
+    "@types/webpack-env": "^1.18.8",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.51.0",
     "eslint-config-next": "^13.5.4",

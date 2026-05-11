@@ -1,8 +1,9 @@
 'use client';
 
 import React, { Suspense, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
+import { useSelector } from '@src/stores/hooks';
 import { useGetTranslationsAndLanguages } from '@src/api/language/useGetTranslationsAndLanguages';
 import { updateLanguagesAndTranslations } from '@src/stores/actions/i18n/action';
 

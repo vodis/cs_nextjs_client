@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { translate } from '@vodis/ui-kit/i18n/Translate';
 
+import { useSelector } from '@src/stores/hooks';
 import AnimateTitle from '@src/components/AnimateTitle';
 import AnimateText from '@src/components/AnimateText';
 import ContentContainer from '@src/app/(home)/ContentContainer';

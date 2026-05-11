@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, lazy } from 'react';
-import { useSelector } from 'react-redux';
 import { translate } from '@vodis/ui-kit/i18n/Translate';
 
+import { useSelector } from '@src/stores/hooks';
 import AnimateTitle from '@src/components/AnimateTitle';
 import Carousel from '@src/components/Carousel';
 import Product0 from '@src/app/use-cases/ProductFlyDescription/0';

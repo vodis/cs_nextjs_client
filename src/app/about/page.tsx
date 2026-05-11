@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { translate } from '@vodis/ui-kit/i18n/Translate';
-import { useSelector } from 'react-redux';
 
+import { useSelector } from '@src/stores/hooks';
 import ContentAbout from '@src/app/about/ContentAbout';
 import AnimateTitle from '@src/components/AnimateTitle';
 import LeaderCard from '@src/components/LeaderCard';

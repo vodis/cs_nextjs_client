@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { translate } from '@vodis/ui-kit/i18n/Translate';
-import { useSelector } from 'react-redux';
 
+import { useSelector } from '@src/stores/hooks';
 import AnimateText from '@src/components/AnimateText';
 import { useDedicatedWordIndexes } from '@src/hooks';
 

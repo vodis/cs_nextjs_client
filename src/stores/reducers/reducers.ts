@@ -8,6 +8,8 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 
+export type RootState = ReturnType<typeof rootReducer>;
+
 declare global {
   type AppState = ReturnType<typeof rootReducer>;
   type AppSelector<T = unknown> = (state: AppState) => T;

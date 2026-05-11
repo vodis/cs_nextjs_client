@@ -1,7 +1,8 @@
+/// <reference types="webpack-env" />
 'use client';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { QueryClient } from '@tanstack/query-core';
+import { QueryClient } from '@tanstack/react-query';
 
 import rootReducer from './reducers/reducers';
 
@@ -28,12 +29,4 @@ export function queryClient() {
       },
     },
   });
-}
-
-declare global {
-  interface NodeModule {
-    hot?: {
-      accept: (cb: () => void) => void;
-    };
-  }
 }
