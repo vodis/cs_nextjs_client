@@ -6,7 +6,7 @@
 # Required repo secret for private npm deps: NPM_TOKEN (same as Docker build).
 # Optional: enable GitHub Packages for the repo if GHCR push fails (packages: write is granted below).
 
-name: Staging — orchestrator contract
+name: Build STAGING - Frontend
 
 on:
   push:
@@ -41,8 +41,10 @@ jobs:
           cache: npm
 
       - name: npm auth (@vodis/ui-kit)
-        if: ${{ secrets.NPM_TOKEN != '' }}
-        run: printf '//registry.npmjs.org/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" > .npmrc
+        run: |
+          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
+            printf '//registry.npmjs.org/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" > .npmrc
+          fi
 
       - name: Install dependencies
         run: npm ci
