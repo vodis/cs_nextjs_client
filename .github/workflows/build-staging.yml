@@ -9,6 +9,9 @@
 name: Build STAGING - Frontend
 
 on:
+  pull_request:
+    branches:
+      - develop
   push:
     branches:
       - develop
