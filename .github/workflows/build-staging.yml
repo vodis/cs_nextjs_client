@@ -3,7 +3,8 @@
 #
 # Produces: immutable image digest (GHCR), SBOM, scan summary, deploy-metadata.json (uploaded as workflow artifacts).
 #
-# Required repo secret for private npm deps: NPM_TOKEN (same as Docker build).
+# @vodis/ui-kit comes from GitHub Packages — auth must target npm.pkg.github.com (not registry.npmjs.org).
+# Optional secret NPM_TOKEN: PAT with read:packages if GITHUB_TOKEN cannot read the package (e.g. other private repos).
 # Optional: enable GitHub Packages for the repo if GHCR push fails (packages: write is granted below).
 
 name: Build STAGING - Frontend
@@ -43,10 +44,13 @@ jobs:
           node-version: "20"
           cache: npm
 
-      - name: npm auth (@vodis/ui-kit)
+      - name: npm auth (@vodis/ui-kit — GitHub Packages)
         run: |
+          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
           if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
-            printf '//registry.npmjs.org/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" > .npmrc
+            printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+          else
+            printf '//npm.pkg.github.com/:_authToken=%s\n' "${GITHUB_TOKEN}" >> .npmrc
           fi
 
       - name: Install dependencies
