@@ -1,6 +1,11 @@
 name: Build DEV - Frontend
 
 on:
+  pull_request:
+    branches:
+      - develop
+    paths-ignore:
+      - 'README.md'
   push:
     branches:
       - 'develop'
@@ -14,8 +19,58 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group:
+    build-dev-${{ github.workflow }}-${{ github.event.pull_request.number ||
+    github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  develop-pr-checks:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    name: PR checks (develop)
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: npm auth (@vodis/ui-kit — GitHub Packages)
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit)."
+            exit 1
+          fi
+          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format (check only)
+        run: npm run format:check
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
   build-frontend-ci:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: build&deploy
 
