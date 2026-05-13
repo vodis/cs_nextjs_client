@@ -13,9 +13,14 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group: build-prod-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-frontend-ci:
     runs-on: ubuntu-latest
+    name: build (production)
 
     strategy:
       matrix:
@@ -24,3 +29,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: npm auth (@vodis/ui-kit — GitHub Packages)
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit)."
+            exit 1
+          fi
+          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format (check only)
+        run: npm run format:check
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build

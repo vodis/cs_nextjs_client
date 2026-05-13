@@ -1,5 +1,6 @@
 # Staging / pre-production — orchestrator artifact contract (ORCHESTRATOR_DEPLOYMENT_PIPELINE_CONTRACT.md §5.1).
-# Runs in parallel with build-dev.yml (SFTP deploy). Does NOT replace legacy develop deploy.
+# Triggered by PRs targeting `staging` and pushes/merges into `staging`.
+# Independent of build-dev.yml (SFTP deploy on `develop`) — does NOT replace the legacy develop deploy.
 #
 # Produces: immutable image digest (GHCR), SBOM, scan summary, deploy-metadata.json (uploaded as workflow artifacts).
 #
@@ -14,10 +15,10 @@ name: Build STAGING - Frontend
 on:
   pull_request:
     branches:
-      - develop
+      - staging
   push:
     branches:
-      - develop
+      - staging
   workflow_dispatch:
 
 permissions:
@@ -31,7 +32,7 @@ concurrency:
 
 env:
   # Opt in to Node 24 for Actions’ embedded Node (checkout, setup-node, docker/*, etc.) ahead of runner default.
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
   SERVICE_NAME: marketing-web
   ENVIRONMENT: staging
 
@@ -45,7 +46,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.0.0
         with:
-          node-version: "24"
+          node-version: '24'
           cache: npm
 
       - name: npm auth (@vodis/ui-kit — GitHub Packages)
@@ -65,7 +66,9 @@ jobs:
 
       - name: GHCR image name (lowercase)
         id: ghcr
-        run: echo "image=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+        run:
+          echo "image=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]'
+          '[:lower:]')" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
@@ -93,10 +96,15 @@ jobs:
           sbom: true
 
       - name: Pull image for local scanners
-        run: docker pull "${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}"
+        run:
+          docker pull "${{ steps.ghcr.outputs.image }}@${{
+          steps.build.outputs.digest }}"
 
       - name: Install Syft
-        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+        run:
+          curl -sSfL
+          https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s
+          -- -b /usr/local/bin
 
       - name: SBOM (CycloneDX JSON)
         run: |
@@ -106,10 +114,11 @@ jobs:
       - name: Trivy vulnerability scan (JSON)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: "${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}"
+          image-ref:
+            '${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}'
           format: json
           output: artifacts/scan-summary.json
-          exit-code: "0"
+          exit-code: '0'
 
       - name: Write deploy-metadata.json
         env:
