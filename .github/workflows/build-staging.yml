@@ -1,14 +1,14 @@
-# Staging / pre-production — orchestrator artifact contract (ORCHESTRATOR_DEPLOYMENT_PIPELINE_CONTRACT.md §5.1).
-# Triggered by PRs targeting `staging` and pushes/merges into `staging`.
-# Independent of build-dev.yml (SFTP deploy on `develop`) — does NOT replace the legacy develop deploy.
+# Staging — orchestrator intake via GHCR (cs_orchestrator polls tags; no webhook).
 #
-# Produces: immutable image digest (GHCR), SBOM, scan summary, deploy-metadata.json (uploaded as workflow artifacts).
+# On push / workflow_dispatch to `staging`:
+#   1. ghcr.io/vodis/cs_nextjs_client:staging  (app image, immutable digest)
+#   2. ghcr.io/vodis/cs_nextjs_client:staging-metadata  (deploy-metadata OCI artifact via ORAS)
 #
-# @vodis/ui-kit is on GitHub Packages. Required repo secret NPM_TOKEN: PAT with read:packages for that package.
-# Docker build passes the token as a BuildKit secret (not ARG) — see Dockerfile deps stage.
+# PRs targeting `staging` run lint only (no image push).
+# No SSH/SFTP deploy — break-glass is manual server change or workflow_dispatch after review.
 #
-# Node: FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 opts JS-based actions into Node 24 before the runner default flips;
-# bump pinned action SHAs when touching this file — https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+# @vodis/ui-kit: repo secret NPM_TOKEN (read:packages). Docker BuildKit secret — see Dockerfile.
+# Node 24 opt-in for Actions JS — bump pinned action SHAs when editing this file.
 
 name: Build STAGING - Frontend
 
@@ -31,13 +31,18 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Opt in to Node 24 for Actions’ embedded Node (checkout, setup-node, docker/*, etc.) ahead of runner default.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-  SERVICE_NAME: marketing-web
+  GHCR_IMAGE: ghcr.io/vodis/cs_nextjs_client
+  SERVICE_NAME: staging-craftscript
   ENVIRONMENT: staging
+  GIT_REPOSITORY: https://github.com/vodis/cs_nextjs_client.git
+  GIT_BRANCH: staging
+  METADATA_MEDIA_TYPE: application/vnd.craftscript.deploy-metadata.v1+json
+  ORAS_VERSION: 1.2.2
 
 jobs:
-  staging-bundle:
+  staging-pr-checks:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -69,11 +74,38 @@ jobs:
       - name: Lint (no write — CI-safe)
         run: pnpm exec eslint --ext .tsx --ext .ts ./ --max-warnings 0
 
-      - name: GHCR image name (lowercase)
-        id: ghcr
-        run:
-          echo "image=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]'
-          '[:lower:]')" >> "$GITHUB_OUTPUT"
+  staging-bundle:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.0.0
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: npm auth (@vodis/ui-kit — GitHub Packages)
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit)."
+            exit 1
+          fi
+          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (no write — CI-safe)
+        run: pnpm exec eslint --ext .tsx --ext .ts ./ --max-warnings 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
@@ -85,96 +117,81 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build and push app image
         id: build
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.18.0
         with:
           context: .
           push: true
           tags: |
-            ${{ steps.ghcr.outputs.image }}:staging-${{ github.sha }}
-            ${{ steps.ghcr.outputs.image }}:staging
-          # BuildKit secret — avoids SecretsUsedInArgOrEnv (NPM_TOKEN in ARG/ENV).
+            ${{ env.GHCR_IMAGE }}:staging-${{ github.sha }}
+            ${{ env.GHCR_IMAGE }}:staging
           secrets: |
             npm_token=${{ secrets.NPM_TOKEN }}
           provenance: true
           sbom: true
 
       - name: Pull image for local scanners
-        run:
-          docker pull "${{ steps.ghcr.outputs.image }}@${{
-          steps.build.outputs.digest }}"
+        run: docker pull "${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}"
 
       - name: Install Syft
-        run:
-          curl -sSfL
-          https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s
-          -- -b /usr/local/bin
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
 
       - name: SBOM (CycloneDX JSON)
         run: |
           mkdir -p artifacts
-          syft "${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}" -o cyclonedx-json=artifacts/sbom.cdx.json
+          syft "${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}" -o cyclonedx-json=artifacts/sbom.cdx.json
 
       - name: Trivy vulnerability scan (JSON)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref:
-            '${{ steps.ghcr.outputs.image }}@${{ steps.build.outputs.digest }}'
+          image-ref: '${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}'
           format: json
           output: artifacts/scan-summary.json
           exit-code: '0'
 
       - name: Write deploy-metadata.json
         env:
-          SERVICE_NAME: ${{ env.SERVICE_NAME }}
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}
-          GHCR_IMAGE: ${{ steps.ghcr.outputs.image }}
           DIGEST: ${{ steps.build.outputs.digest }}
-          SERVER_URL: ${{ github.server_url }}
-          REPOSITORY: ${{ github.repository }}
           SHA: ${{ github.sha }}
-          REF_NAME: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -p artifacts
-          REPO_PATH="${GHCR_IMAGE#ghcr.io/}"
-          export REPO_PATH
           python3 <<'PY'
           import json
           import os
           from datetime import datetime, timezone
 
-          registry = "ghcr.io"
-          repo_path = os.environ["REPO_PATH"]
+          server = "https://github.com"
+          gh_repo = "vodis/cs_nextjs_client"
+          run_id = os.environ["RUN_ID"]
           digest = os.environ["DIGEST"]
-          server = os.environ["SERVER_URL"].rstrip("/")
-          gh_repo = os.environ["REPOSITORY"]
 
           meta = {
               "schemaVersion": "1",
-              "service": os.environ["SERVICE_NAME"],
-              "environment": os.environ["ENVIRONMENT"],
+              "service": "staging-craftscript",
+              "environment": "staging",
               "git": {
-                  "repository": f"{server}/{gh_repo}.git",
+                  "repository": "https://github.com/vodis/cs_nextjs_client.git",
                   "commitSha": os.environ["SHA"],
-                  "branch": os.environ["REF_NAME"],
+                  "branch": "staging",
                   "actor": os.environ["ACTOR"],
               },
               "image": {
-                  "registry": registry,
-                  "repository": repo_path,
+                  "registry": "ghcr.io",
+                  "repository": "vodis/cs_nextjs_client",
                   "digest": digest,
               },
               "security": {
-                  "sbomUri": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}#artifacts-sbom.cdx.json",
-                  "scanSummaryUri": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}#artifacts-scan-summary.json",
-                  "signatureRef": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}#staging-keyless-signing-when-enabled",
+                  "sbomUri": f"{server}/{gh_repo}/actions/runs/{run_id}#artifacts-sbom.cdx.json",
+                  "scanSummaryUri": f"{server}/{gh_repo}/actions/runs/{run_id}#artifacts-scan-summary.json",
+                  "signatureRef": f"ghcr.io/vodis/cs_nextjs_client@{digest}",
               },
               "build": {
-                  "pipelineId": os.environ["RUN_ID"],
-                  "pipelineUrl": f"{server}/{gh_repo}/actions/runs/{os.environ['RUN_ID']}",
+                  "pipelineId": run_id,
+                  "pipelineUrl": f"{server}/{gh_repo}/actions/runs/{run_id}",
                   "builtAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
               },
           }
@@ -183,7 +200,17 @@ jobs:
               f.write("\n")
           PY
 
-      - name: Upload staging bundle
+      - name: Install ORAS
+        run: |
+          curl -sSfL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
+            | tar -xz -C /usr/local/bin oras
+
+      - name: Push deploy-metadata to GHCR (OCI artifact)
+        run: |
+          oras push "${GHCR_IMAGE}:staging-metadata" \
+            "artifacts/deploy-metadata.json:${METADATA_MEDIA_TYPE}"
+
+      - name: Upload staging bundle (debug / audit)
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: staging-deploy-bundle-${{ github.sha }}
