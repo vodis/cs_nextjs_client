@@ -32,6 +32,9 @@ concurrency:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  # GHCR pulls after push can time out on the default ~60s client limit.
+  DOCKER_CLIENT_TIMEOUT: '600'
+  COMPOSE_HTTP_TIMEOUT: '600'
   GHCR_IMAGE: ghcr.io/vodis/cs_nextjs_client
   SERVICE_NAME: staging-craftscript
   ENVIRONMENT: staging
@@ -123,16 +126,42 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64
           tags: |
-            ${{ env.GHCR_IMAGE }}:staging-${{ github.sha }}
             ${{ env.GHCR_IMAGE }}:staging
+            ${{ env.GHCR_IMAGE }}:${{ github.sha }}
           secrets: |
             npm_token=${{ secrets.NPM_TOKEN }}
           provenance: true
           sbom: true
 
+      - name: Verify build digest output
+        run: |
+          set -euo pipefail
+          if [ -z "${{ steps.build.outputs.digest }}" ]; then
+            echo "::error::steps.build.outputs.digest is empty — check build step id: build"
+            exit 1
+          fi
+          echo "build.digest=${{ steps.build.outputs.digest }}"
+
       - name: Pull image for local scanners
-        run: docker pull "${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}"
+        env:
+          IMAGE_REF: ${{ env.GHCR_IMAGE }}
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          set -euo pipefail
+
+          test -n "$IMAGE_DIGEST"
+          echo "Pulling ${IMAGE_REF}@${IMAGE_DIGEST}"
+          echo "SCAN_IMAGE_REF=${IMAGE_REF}@${IMAGE_DIGEST}" >> "$GITHUB_ENV"
+
+          for i in 1 2 3 4 5; do
+            docker pull "${IMAGE_REF}@${IMAGE_DIGEST}" && exit 0
+            echo "::warning::Pull attempt ${i}/5 failed; retrying in 10s..."
+            sleep 10
+          done
+
+          docker pull "${IMAGE_REF}@${IMAGE_DIGEST}"
 
       - name: Install Syft
         run: |
@@ -141,12 +170,12 @@ jobs:
       - name: SBOM (CycloneDX JSON)
         run: |
           mkdir -p artifacts
-          syft "${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}" -o cyclonedx-json=artifacts/sbom.cdx.json
+          syft "${SCAN_IMAGE_REF}" -o cyclonedx-json=artifacts/sbom.cdx.json
 
       - name: Trivy vulnerability scan (JSON)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: '${{ env.GHCR_IMAGE }}@${{ steps.build.outputs.digest }}'
+          image-ref: ${{ env.SCAN_IMAGE_REF }}
           format: json
           output: artifacts/scan-summary.json
           exit-code: '0'

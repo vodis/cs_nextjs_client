@@ -37,7 +37,7 @@ There is **no webhook** and **no SSH/SFTP deploy** from staging CI. Normal stagi
 
 | Tag | Type | Role |
 |-----|------|------|
-| `ghcr.io/vodis/cs_nextjs_client:staging` | Container image | Runnable app (also `:staging-<sha>` for traceability) |
+| `ghcr.io/vodis/cs_nextjs_client:staging` | Container image | Runnable app (also `:<commit-sha>` tag for traceability) |
 | `ghcr.io/vodis/cs_nextjs_client:staging-metadata` | OCI artifact (ORAS) | `deploy-metadata.json` with media type `application/vnd.craftscript.deploy-metadata.v1+json` |
 
 Orchestrator service id: **`staging-craftscript`**, environment: **`staging`**.
