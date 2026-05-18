@@ -39,11 +39,16 @@ jobs:
       - name: Get latest code
         uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
+          cache: pnpm
 
       - name: npm auth (@vodis/ui-kit — GitHub Packages)
         run: |
@@ -55,54 +60,55 @@ jobs:
           printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Format (check only)
-        run: npm run format:check
+        run: pnpm run format:check
 
       - name: TypeScript
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: Test
-        run: npm test
+        run: pnpm test
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
-  build-frontend-ci:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    name: build&deploy
+  # TODO: This is legacy SFTP deploy, not used anymore.
+  # build-frontend-ci:
+  #   if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+  #   runs-on: ubuntu-latest
+  #   name: build&deploy
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
 
-    steps:
-      - name: 🕵️‍♂️ Get latest code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: 🕵️‍♂️ Get latest code
+  #       uses: actions/checkout@v3
 
-      - name: 🚀 Deploy file to server
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          username: ${{ secrets.REMOTE_USER }}
-          server: '${{ secrets.REMOTE_HOST }}'
-          ssh_private_key: ${{ secrets.REMOTE_KEY }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local_path: './'
-          remote_path: ${{ secrets.FTP_PATH }}
-          sftpArgs: '-o ConnectTimeout=5'
-          sftp_only: true
+  #     - name: 🚀 Deploy file to server
+  #       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+  #       with:
+  #         username: ${{ secrets.REMOTE_USER }}
+  #         server: '${{ secrets.REMOTE_HOST }}'
+  #         ssh_private_key: ${{ secrets.REMOTE_KEY }}
+  #         password: ${{ secrets.FTP_PASSWORD }}
+  #         local_path: './'
+  #         remote_path: ${{ secrets.FTP_PATH }}
+  #         sftpArgs: '-o ConnectTimeout=5'
+  #         sftp_only: true
 
-      - name: 🛠 Execute npm commands on remote server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          script: |
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh 
-            cd ${{ secrets.FTP_PATH }}
-            make build-development
-            make start-development
+  #     - name: 🛠 Execute npm commands on remote server
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.REMOTE_HOST }}
+  #         username: ${{ secrets.REMOTE_USER }}
+  #         password: ${{ secrets.FTP_PASSWORD }}
+  #         script: |
+  #           export NVM_DIR=~/.nvm
+  #           source ~/.nvm/nvm.sh
+  #           cd ${{ secrets.FTP_PATH }}
+  #           make build-development
+  #           make start-development
