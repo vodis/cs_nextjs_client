@@ -144,6 +144,7 @@ jobs:
           fi
           echo "build.digest=${{ steps.build.outputs.digest }}"
 
+      # Pull on the GitHub runner only (Syft/Trivy) — not a VPS deploy.
       - name: Pull image for local scanners
         env:
           IMAGE_REF: ${{ env.GHCR_IMAGE }}

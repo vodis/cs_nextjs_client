@@ -8,7 +8,7 @@ This document covers local development, branch/CI conventions, and the **staging
 
 | Branch | Purpose | CI workflow | Deploy |
 |--------|---------|-------------|--------|
-| `develop` | Day-to-day integration | [build-dev.yml](./.github/workflows/build-dev.yml) — lint, format, typecheck, test, build on PR/push | **No auto-deploy** (legacy SFTP/SSH steps are disabled) |
+| `develop` | Day-to-day integration | [build-dev.yml](./.github/workflows/build-dev.yml) — lint, format, typecheck, test, build on PR/push | **No deploy** (CI checks only) |
 | `staging` | Pre-production / orchestrator intake | [build-staging.yml](./.github/workflows/build-staging.yml) | **cs_orchestrator** polls GHCR and deploys |
 | `master` | Production | [build-prod.yml](./.github/workflows/build-prod.yml) — build checks only (no container publish in this repo yet) | Out of scope for this guide |
 
@@ -220,7 +220,7 @@ Use this list after merging staging CI changes and before relying on orchestrato
 
 | File | Trigger | Notes |
 |------|---------|-------|
-| [.github/workflows/build-dev.yml](./.github/workflows/build-dev.yml) | `develop`, `releases/**` | PR checks + push checks; SFTP deploy commented out |
+| [.github/workflows/build-dev.yml](./.github/workflows/build-dev.yml) | `develop`, `releases/**` | PR checks + push checks only |
 | [.github/workflows/build-staging.yml](./.github/workflows/build-staging.yml) | `staging` | GHCR app + metadata; orchestrator intake |
 | [.github/workflows/build-prod.yml](./.github/workflows/build-prod.yml) | `master` | npm-based build/test only |
 

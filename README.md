@@ -41,12 +41,9 @@ You can check out
 [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your
 feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the
-[Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
-
-Check out our
-[Next.js deployment documentation](https://nextjs.org/docs/deployment) for more
-details.
+This repo does not deploy to CraftScript hosts from CI. Staging and production
+flows are documented in [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
+(staging: **cs_orchestrator** polls GHCR artifacts from
+[build-staging.yml](./.github/workflows/build-staging.yml)).
