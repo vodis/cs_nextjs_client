@@ -18,8 +18,17 @@ on:
       - staging
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
 jobs:
   staging:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment: staging
