@@ -10,7 +10,7 @@ This document covers local development, branch/CI conventions, and the **staging
 |--------|---------|-------------|--------|
 | `develop` | Day-to-day integration | [build-dev.yml](./.github/workflows/build-dev.yml) — lint, format, typecheck, test, build on PR/push | **No deploy** (CI checks only) |
 | `staging` | Pre-production / orchestrator intake | [build-staging.yml](./.github/workflows/build-staging.yml) | **cs_orchestrator** polls GHCR and deploys |
-| `master` | Production | [build-prod.yml](./.github/workflows/build-prod.yml) — build checks only (no container publish in this repo yet) | Out of scope for this guide |
+| `master` | Production | [build-prod.yml](./.github/workflows/build-prod.yml) | **cs_orchestrator** polls GHCR (`:prod` + `:prod-metadata`) |
 
 **Important:** Staging artifacts always declare `git.branch: "staging"`. Builds that should feed staging must land on the **`staging`** branch (merge `develop` → `staging`, or commit directly to `staging`). Do not point the orchestrator catalog at `develop` unless you intentionally change both CI triggers and orchestrator config.
 
@@ -205,14 +205,13 @@ Use this list after merging staging CI changes and before relying on orchestrato
 
 - [ ] Team agrees: **`develop`** = integration only; **`staging`** = orchestrator releases.
 - [ ] Remove or archive any runbooks that describe SSH/npm deploy to staging from this repo.
-- [ ] When production container publish is added, mirror this pattern (separate tag + metadata artifact + orchestrator service id).
+- [ ] Configure orchestrator catalog for **`prod-craftscript`** watching `:prod` + `:prod-metadata` on `master`.
 
 ### Future improvements (optional)
 
 - [ ] Fail Trivy on critical CVEs (`exit-code: '1'`) once baseline is clean.
 - [ ] Cosign/keyless signing and point `security.signatureRef` at attestation URI.
 - [ ] Publish SBOM/scan as additional GHCR artifacts if orchestrator should consume them without GitHub Actions URLs.
-- [ ] Align **build-prod.yml** with the same GHCR + ORAS model when production orchestrator intake is ready.
 
 ---
 
@@ -221,8 +220,8 @@ Use this list after merging staging CI changes and before relying on orchestrato
 | File | Trigger | Notes |
 |------|---------|-------|
 | [.github/workflows/build-dev.yml](./.github/workflows/build-dev.yml) | `develop`, `releases/**` | PR checks + push checks only |
-| [.github/workflows/build-staging.yml](./.github/workflows/build-staging.yml) | `staging` | GHCR app + metadata; orchestrator intake |
-| [.github/workflows/build-prod.yml](./.github/workflows/build-prod.yml) | `master` | npm-based build/test only |
+| [.github/workflows/build-staging.yml](./.github/workflows/build-staging.yml) | `staging` | Calls [reusable-build.yml](./.github/workflows/reusable-build.yml) |
+| [.github/workflows/build-prod.yml](./.github/workflows/build-prod.yml) | `master` | Same reusable workflow (`:prod` tags) |
 
 ---
 
