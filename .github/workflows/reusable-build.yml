@@ -95,6 +95,10 @@ jobs:
   bundle:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.0
@@ -147,6 +151,7 @@ jobs:
             ${{ env.GHCR_IMAGE }}:${{ github.sha }}
           secrets: |
             npm_token=${{ secrets.NPM_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           provenance: true
           sbom: true
 
@@ -159,6 +164,28 @@ jobs:
           fi
           echo "build.digest=${{ steps.build.outputs.digest }}"
 
+      # Wait for GHCR manifest propagation before pull (avoids post-push race).
+      - name: Wait for image manifest on GHCR
+        env:
+          IMAGE_REF: ${{ env.GHCR_IMAGE }}
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          set -euo pipefail
+          test -n "$IMAGE_DIGEST"
+          REF="${IMAGE_REF}@${IMAGE_DIGEST}"
+          echo "Waiting for manifest: ${REF}"
+          for i in $(seq 1 12); do
+            if docker buildx imagetools inspect "$REF" >/dev/null 2>&1; then
+              echo "Manifest available (attempt ${i}/12)"
+              exit 0
+            fi
+            echo "::warning::Manifest not ready (attempt ${i}/12); sleeping 15s..."
+            sleep 15
+          done
+          echo "::error::Timed out waiting for GHCR manifest"
+          docker buildx imagetools inspect "$REF"
+          exit 1
+
       # Pull on the GitHub runner only (Syft/Trivy) — not a VPS deploy.
       - name: Pull image for local scanners
         env:
@@ -168,16 +195,21 @@ jobs:
           set -euo pipefail
 
           test -n "$IMAGE_DIGEST"
-          echo "Pulling ${IMAGE_REF}@${IMAGE_DIGEST}"
-          echo "SCAN_IMAGE_REF=${IMAGE_REF}@${IMAGE_DIGEST}" >> "$GITHUB_ENV"
+          REF="${IMAGE_REF}@${IMAGE_DIGEST}"
+          echo "Pulling ${REF}"
+          echo "SCAN_IMAGE_REF=${REF}" >> "$GITHUB_ENV"
 
-          for i in 1 2 3 4 5; do
-            docker pull "${IMAGE_REF}@${IMAGE_DIGEST}" && exit 0
-            echo "::warning::Pull attempt ${i}/5 failed; retrying in 10s..."
-            sleep 10
+          for i in $(seq 1 12); do
+            if docker pull "$REF"; then
+              echo "Pull succeeded (attempt ${i}/12)"
+              exit 0
+            fi
+            echo "::warning::Pull attempt ${i}/12 failed; sleeping 15s..."
+            sleep 15
           done
 
-          docker pull "${IMAGE_REF}@${IMAGE_DIGEST}"
+          echo "::error::Timed out pulling image from GHCR"
+          exit 1
 
       - name: Install Syft
         run: |
