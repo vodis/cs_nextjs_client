@@ -1,26 +1,42 @@
+# Production — orchestrator intake via GHCR (cs_orchestrator polls tags; no webhook).
+#
+# On push / workflow_dispatch to `master`:
+#   1. ghcr.io/vodis/cs_nextjs_client:prod
+#   2. ghcr.io/vodis/cs_nextjs_client:prod-metadata
+#
+# PRs targeting `master` run lint only (no image push).
+# Implementation: .github/workflows/reusable-build.yml
+
 name: Build PROD - Frontend
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
-      - "master"
-    paths-ignore:
-      - "README.md"
-
+      - master
   workflow_dispatch:
 
 permissions:
-  id-token: write
   contents: read
+  packages: write
+  id-token: write
 
 jobs:
-  build-frontend-ci:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  prod:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      environment: production
+      service_name: craftscript
+      git_branch: master
+      image_tag: prod
+      metadata_tag: prod-metadata
+      artifact_prefix: prod-deploy-bundle
+      concurrency_group: prod-orchestrator
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

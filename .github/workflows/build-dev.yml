@@ -1,12 +1,17 @@
 name: Build DEV - Frontend
 
 on:
+  pull_request:
+    branches:
+      - develop
+    paths-ignore:
+      - 'README.md'
   push:
     branches:
-      - "develop"
+      - 'develop'
       - 'releases/**'
     paths-ignore:
-      - "README.md"
+      - 'README.md'
 
   workflow_dispatch:
 
@@ -14,40 +19,57 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group:
+    build-dev-${{ github.workflow }}-${{ github.event.pull_request.number ||
+    github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-frontend-ci:
+  develop-pr-checks:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    name: build&deploy
+    name: PR checks (develop)
 
     strategy:
       matrix:
         node-version: [18.x]
 
     steps:
-      - name: 🕵️‍♂️ Get latest code
+      - name: Get latest code
         uses: actions/checkout@v3
 
-      - name: 🚀 Deploy file to server
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          username: ${{ secrets.REMOTE_USER }}
-          server: '${{ secrets.REMOTE_HOST }}'
-          ssh_private_key: ${{ secrets.REMOTE_KEY }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local_path: './'
-          remote_path: ${{ secrets.FTP_PATH }}
-          sftpArgs: '-o ConnectTimeout=5'
-          sftp_only: true
+          version: 10.15.0
 
-      - name: 🛠 Execute npm commands on remote server
-        uses: appleboy/ssh-action@master
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          script: |
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh 
-            cd ${{ secrets.FTP_PATH }}
-            make build-development
-            make start-development
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: npm auth (@vodis/ui-kit — GitHub Packages)
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit)."
+            exit 1
+          fi
+          echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format (check only)
+        run: pnpm run format:check
+
+      - name: TypeScript
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm run build

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, MutableRefObject } from "react";
+import { useEffect, useState, useCallback, MutableRefObject } from 'react';
 
 const useResize = (ref: MutableRefObject<HTMLElement | null>) => {
   const getDimensions = useCallback(
@@ -6,7 +6,7 @@ const useResize = (ref: MutableRefObject<HTMLElement | null>) => {
       width: ref.current?.offsetWidth || 0,
       height: ref.current?.offsetHeight || 0,
     }),
-    [ref]
+    [ref],
   );
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -20,10 +20,10 @@ const useResize = (ref: MutableRefObject<HTMLElement | null>) => {
       setDimensions(getDimensions());
     }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, [ref, getDimensions]);
 

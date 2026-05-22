@@ -1,0 +1,42 @@
+# Staging — orchestrator intake via GHCR (cs_orchestrator polls tags; no webhook).
+#
+# On push / workflow_dispatch to `staging`:
+#   1. ghcr.io/vodis/cs_nextjs_client:staging
+#   2. ghcr.io/vodis/cs_nextjs_client:staging-metadata
+#
+# PRs targeting `staging` run lint only (no image push).
+# Implementation: .github/workflows/reusable-build.yml
+
+name: Build STAGING - Frontend
+
+on:
+  pull_request:
+    branches:
+      - staging
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  staging:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      environment: staging
+      service_name: staging-craftscript
+      git_branch: staging
+      image_tag: staging
+      metadata_tag: staging-metadata
+      artifact_prefix: staging-deploy-bundle
+      concurrency_group: staging-orchestrator
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
