@@ -11,7 +11,9 @@
     "format": "prettier --write ./",
     "format:check": "prettier --check ./",
     "typecheck": "tsc --noEmit",
-    "test": "node --test ci/smoke.test.mjs"
+    "test": "node --test ci/smoke.test.mjs",
+    "test:release-version": "node --test ci/check-version-bump.test.mjs",
+    "check:release-version": "node ci/check-version-bump.mjs"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
