@@ -1,8 +1,8 @@
 # Production — orchestrator intake via GHCR (cs_orchestrator polls tags; no webhook).
 #
 # On push / workflow_dispatch to `master`:
-#   1. ghcr.io/vodis/cs_nextjs_client:prod
-#   2. ghcr.io/vodis/cs_nextjs_client:prod-metadata
+#   1. ghcr.io/vodis/cs_nextjs_client:production
+#   2. ghcr.io/vodis/cs_nextjs_client:production-metadata
 #
 # PRs targeting `master` run lint only (no image push).
 # Implementation: .github/workflows/reusable-build.yml
@@ -34,8 +34,8 @@ jobs:
       environment: production
       service_name: craftscript
       git_branch: master
-      image_tag: prod
-      metadata_tag: prod-metadata
+      image_tag: production
+      metadata_tag: production-metadata
       artifact_prefix: prod-deploy-bundle
       concurrency_group: prod-orchestrator
     secrets:

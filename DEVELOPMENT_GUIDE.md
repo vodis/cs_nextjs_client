@@ -10,7 +10,7 @@ This document covers local development, branch/CI conventions, and the **staging
 |--------|---------|-------------|--------|
 | `develop` | Day-to-day integration | [build-dev.yml](./.github/workflows/build-dev.yml) — lint, format, typecheck, test, build on PR/push | **No deploy** (CI checks only) |
 | `staging` | Pre-production / orchestrator intake | [build-staging.yml](./.github/workflows/build-staging.yml) | **cs_orchestrator** polls GHCR and deploys |
-| `master` | Production | [build-prod.yml](./.github/workflows/build-prod.yml) | **cs_orchestrator** polls GHCR (`:prod` + `:prod-metadata`) |
+| `master` | Production | [build-prod.yml](./.github/workflows/build-prod.yml) | **cs_orchestrator** polls GHCR (`:production` + `:production-metadata`) |
 
 **Important:** Staging artifacts always declare `git.branch: "staging"`. Builds that should feed staging must land on the **`staging`** branch (merge `develop` → `staging`, or commit directly to `staging`). Do not point the orchestrator catalog at `develop` unless you intentionally change both CI triggers and orchestrator config.
 
@@ -205,7 +205,8 @@ Use this list after merging staging CI changes and before relying on orchestrato
 
 - [ ] Team agrees: **`develop`** = integration only; **`staging`** = orchestrator releases.
 - [ ] Remove or archive any runbooks that describe SSH/npm deploy to staging from this repo.
-- [ ] Configure orchestrator catalog for **`prod-craftscript`** watching `:prod` + `:prod-metadata` on `master`.
+- [ ] Configure orchestrator catalog for **`craftscript`** watching
+  `:production` + `:production-metadata` on `master`.
 
 ### Future improvements (optional)
 
@@ -221,7 +222,7 @@ Use this list after merging staging CI changes and before relying on orchestrato
 |------|---------|-------|
 | [.github/workflows/build-dev.yml](./.github/workflows/build-dev.yml) | `develop`, `releases/**` | PR checks + push checks only |
 | [.github/workflows/build-staging.yml](./.github/workflows/build-staging.yml) | `staging` | Calls [reusable-build.yml](./.github/workflows/reusable-build.yml) |
-| [.github/workflows/build-prod.yml](./.github/workflows/build-prod.yml) | `master` | Same reusable workflow (`:prod` tags) |
+| [.github/workflows/build-prod.yml](./.github/workflows/build-prod.yml) | `master` | Same reusable workflow (`:production` tags) |
 
 ---
 
