@@ -32,6 +32,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN npm install --omit=dev --no-audit --no-fund sharp@0.34.5 \
+  && npm cache clean --force
+
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
