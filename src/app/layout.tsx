@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import localFont from 'next/font/local';
 
 import Providers from '@src/providers/providers';
+import GoogleAnalytics from '@src/components/GoogleAnalytics';
 import { Header } from '@src/components/Header';
 import { Footer } from '@src/components/Footer';
 import Menu from '@src/components/Menu';
@@ -58,6 +59,7 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
           'text-gray-100 leading-normal',
         )}
       >
+        <GoogleAnalytics />
         <main className="h-full flex flex-1 flex-col bg-black">
           <Providers>
             <Header>
