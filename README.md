@@ -44,8 +44,6 @@ feedback and contributions are welcome!
 ## Deployment
 
 This repo does not deploy to CraftScript hosts from CI. Staging and production
-flows are documented in [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
-(staging: **cs_orchestrator** polls GHCR artifacts from
-[build-staging.yml](./.github/workflows/build-staging.yml); production:
-**cs_orchestrator** polls `:production` and `:production-metadata` artifacts
-from [build-prod.yml](./.github/workflows/build-prod.yml)).
+flows are documented in [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) (staging:
+**cs_orchestrator** polls GHCR artifacts from
+[build-staging.yml](./.github/workflows/build-staging.yml)).
