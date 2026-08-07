@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 
 import AboutLayout from '@src/app/about/layout';
 import AboutPage from '@src/app/about/page';
-import { isLocaleSlug, type LocaleSlug } from '@src/i18n/locales';
+import {
+  DEFAULT_LOCALE,
+  isLocaleSlug,
+  type LocaleSlug,
+} from '@src/i18n/locales';
 import { buildLocalizedMetadata } from '@src/i18n/routes';
 
 interface ILocalizedPageProps {
@@ -14,7 +18,7 @@ interface ILocalizedPageProps {
 export function generateMetadata({ params }: ILocalizedPageProps): Metadata {
   return buildLocalizedMetadata(
     '/about',
-    isLocaleSlug(params.locale) ? params.locale : 'en',
+    isLocaleSlug(params.locale) ? params.locale : DEFAULT_LOCALE,
   );
 }
 

@@ -35,6 +35,9 @@ test('locale utilities normalize and map supported locales', async () => {
   assert.deepEqual(locales.SUPPORTED_LANGUAGES, ['EN', 'UA', 'PT']);
   assert.equal(locales.localeToLanguage('ua'), 'UA');
   assert.equal(locales.languageToLocale('PT'), 'pt');
+  assert.equal(locales.getPreferredLocale('UA'), 'ua');
+  assert.equal(locales.getPreferredLocale('pt'), 'pt');
+  assert.equal(locales.getPreferredLocale(undefined), 'en');
   assert.equal(locales.normalizeLanguage('pt'), 'PT');
   assert.equal(locales.normalizeLanguage('missing'), 'EN');
   assert.equal(locales.isLocaleSlug('en'), true);

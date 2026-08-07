@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  DEFAULT_LOCALE,
   getLocaleFromPathname,
+  getPreferredLocale,
   isLocaleSlug,
   localeToLanguage,
   withLocalePath,
@@ -21,11 +21,14 @@ export function middleware(request: NextRequest) {
   const [, maybeLocale] = pathname.split('/');
 
   if (!isLocaleSlug(maybeLocale)) {
+    const preferredLocale = getPreferredLocale(
+      request.cookies.get('active-language')?.value,
+    );
     const url = request.nextUrl.clone();
-    url.pathname = withLocalePath(pathname, DEFAULT_LOCALE);
+    url.pathname = withLocalePath(pathname, preferredLocale);
 
     const response = NextResponse.redirect(url, 308);
-    response.cookies.set('active-language', localeToLanguage(DEFAULT_LOCALE), {
+    response.cookies.set('active-language', localeToLanguage(preferredLocale), {
       path: '/',
     });
 

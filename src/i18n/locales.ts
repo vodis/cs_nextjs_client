@@ -43,6 +43,10 @@ export function languageToLocale(language: LanguageCode): LocaleSlug {
   return LANGUAGE_TO_LOCALE[language];
 }
 
+export function getPreferredLocale(language: string | undefined): LocaleSlug {
+  return languageToLocale(normalizeLanguage(language));
+}
+
 export function normalizeLanguage(language: string | undefined): LanguageCode {
   const normalized = language?.toUpperCase();
 
