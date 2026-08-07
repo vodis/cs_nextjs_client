@@ -12,6 +12,7 @@ import Menu from '@src/components/Menu';
 import DynamicBg from '@src/components/DynamicBg';
 
 import 'react-toastify/dist/ReactToastify.min.css';
+import '@vodis/cs-foundation/styles/tokens.css';
 import './globals.css';
 
 import '@src/api/api';

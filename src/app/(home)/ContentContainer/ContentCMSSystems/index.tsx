@@ -1,6 +1,6 @@
-import Translate from '@vodis/ui-kit/i18n/Translate';
 import React from 'react';
 
+import Translate from '@src/components/Translate';
 import { InfoBox } from '@src/components/InfoBox';
 
 const ContentCMSSystems = () => {

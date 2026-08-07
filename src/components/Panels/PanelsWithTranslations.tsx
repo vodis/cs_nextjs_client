@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { translate } from '@vodis/ui-kit/i18n/Translate';
 
+import { translate } from '@src/i18n/translate';
 import { useSelector } from '@src/stores/hooks';
 import { IPanels } from '@src/components/Panels/types';
 import Panels from '@src/components/Panels';
