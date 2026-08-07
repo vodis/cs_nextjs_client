@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import Translate from '@vodis/ui-kit/i18n/Translate';
 import clsx from 'clsx';
+
+import Translate from '@src/components/Translate';
 
 import styles from './breadcrumbs.module.scss';
 import { IBreadcrumbs } from './types';

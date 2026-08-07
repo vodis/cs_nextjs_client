@@ -1,7 +1,8 @@
 import React, { PropsWithChildren } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Translate from '@vodis/ui-kit/i18n/Translate';
+
+import Translate from '@src/components/Translate';
 
 export const Header: React.FC<PropsWithChildren> = ({ children }) => {
   return (

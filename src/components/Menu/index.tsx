@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import Translate from '@vodis/ui-kit/i18n/Translate';
 import { clsx } from 'clsx';
 
+import Translate from '@src/components/Translate';
 import { IMenu } from '@src/components/Menu/types';
 import CloseBtn from '@src/components/CloseBtn';
 import Languages from '@src/components/Languages';
