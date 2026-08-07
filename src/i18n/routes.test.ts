@@ -1,72 +1,75 @@
-import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-test('route metadata utilities use translated metadata with canonical and alternate locale URLs', async () => {
-  process.env.NEXT_PUBLIC_SITE_URL = 'https://example.test';
-  process.env.NEXT_PUBLIC_API_BASE_URL = 'https://api.example.test';
+describe('route metadata utilities', () => {
+  const originalSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const originalApiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (url, init) => {
-    fetchCalls.push({ url: String(url), init });
+  beforeEach(() => {
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://example.test';
+    process.env.NEXT_PUBLIC_API_BASE_URL = 'https://api.example.test';
+    vi.resetModules();
+  });
 
-    return {
-      ok: true,
-      async json() {
-        return {
-          translations: {
-            'Texts.metadata-about-title': 'Translated About Title',
-            'Texts.metadata-about-description': 'Translated about description.',
-          },
-        };
+  afterEach(() => {
+    process.env.NEXT_PUBLIC_SITE_URL = originalSiteUrl;
+    process.env.NEXT_PUBLIC_API_BASE_URL = originalApiBaseUrl;
+    vi.restoreAllMocks();
+  });
+
+  it('uses translated metadata with canonical and alternate locale URLs', async () => {
+    const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
+    const fetchMock = vi.fn(
+      async (url: Parameters<typeof fetch>[0], init?: RequestInit) => {
+        fetchCalls.push({ url: String(url), init });
+
+        return new Response(
+          JSON.stringify({
+            translations: {
+              'Texts.metadata-about-title': 'Translated About Title',
+              'Texts.metadata-about-description':
+                'Translated about description.',
+            },
+          }),
+        );
       },
-    } as Response;
-  };
+    );
 
-  try {
+    vi.stubGlobal('fetch', fetchMock);
+
     const routes = await import('./routes');
     const metadata = await routes.buildLocalizedMetadata('/about', 'ua');
 
-    assert.equal(
-      routes.absoluteUrl('/ua/about'),
+    expect(routes.absoluteUrl('/ua/about')).toBe(
       'https://example.test/ua/about',
     );
-    assert.deepEqual(routes.LOCALIZED_ROUTE_PATHS, [
+    expect(routes.LOCALIZED_ROUTE_PATHS).toEqual([
       '/',
       '/use-cases',
       '/ai',
       '/about',
     ]);
-    assert.equal(
-      fetchCalls[0].url,
+    expect(fetchCalls[0].url).toBe(
       'https://api.example.test/api/v1/translations/UA',
     );
-    assert.equal(fetchCalls[0].init?.next?.revalidate, 3600);
-    assert.equal(metadata.title, 'Translated About Title');
-    assert.equal(metadata.description, 'Translated about description.');
-    assert.equal(
-      metadata.alternates?.canonical,
+    expect(fetchCalls[0].init?.next?.revalidate).toBe(3600);
+    expect(metadata.title).toBe('Translated About Title');
+    expect(metadata.description).toBe('Translated about description.');
+    expect(metadata.alternates?.canonical).toBe(
       'https://example.test/ua/about',
     );
-    assert.equal(
-      metadata.alternates?.languages?.en,
+    expect(metadata.alternates?.languages?.en).toBe(
       'https://example.test/en/about',
     );
-    assert.equal(
-      metadata.alternates?.languages?.uk,
+    expect(metadata.alternates?.languages?.uk).toBe(
       'https://example.test/ua/about',
     );
-    assert.equal(
-      metadata.alternates?.languages?.pt,
+    expect(metadata.alternates?.languages?.pt).toBe(
       'https://example.test/pt/about',
     );
-    assert.equal(
-      metadata.alternates?.languages?.['x-default'],
+    expect(metadata.alternates?.languages?.['x-default']).toBe(
       'https://example.test/en/about',
     );
-    assert.equal(metadata.openGraph?.locale, 'uk');
-    assert.equal(metadata.openGraph?.url, 'https://example.test/ua/about');
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
+    expect(metadata.openGraph?.locale).toBe('uk');
+    expect(metadata.openGraph?.url).toBe('https://example.test/ua/about');
+  });
 });

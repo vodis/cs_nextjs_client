@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { describe, expect, it } from 'vitest';
 
 import {
   SUPPORTED_LANGUAGES,
@@ -16,31 +15,33 @@ import {
   withLocalePath,
 } from './locales';
 
-test('locale utilities normalize and map supported locales', () => {
-  assert.deepEqual(SUPPORTED_LOCALES, ['en', 'ua', 'pt']);
-  assert.deepEqual(SUPPORTED_LANGUAGES, ['EN', 'UA', 'PT']);
-  assert.equal(localeToLanguage('ua'), 'UA');
-  assert.equal(languageToLocale('PT'), 'pt');
-  assert.equal(getPreferredLocale('UA'), 'ua');
-  assert.equal(getPreferredLocale('pt'), 'pt');
-  assert.equal(getPreferredLocale(undefined), 'en');
-  assert.equal(normalizeLanguage('pt'), 'PT');
-  assert.equal(normalizeLanguage('missing'), 'EN');
-  assert.equal(isLocaleSlug('en'), true);
-  assert.equal(isLocaleSlug('de'), false);
-  assert.equal(isLanguageCode('UA'), true);
-  assert.equal(isLanguageCode('ua'), false);
-});
+describe('locale utilities', () => {
+  it('normalizes and maps supported locales', () => {
+    expect(SUPPORTED_LOCALES).toEqual(['en', 'ua', 'pt']);
+    expect(SUPPORTED_LANGUAGES).toEqual(['EN', 'UA', 'PT']);
+    expect(localeToLanguage('ua')).toBe('UA');
+    expect(languageToLocale('PT')).toBe('pt');
+    expect(getPreferredLocale('UA')).toBe('ua');
+    expect(getPreferredLocale('pt')).toBe('pt');
+    expect(getPreferredLocale(undefined)).toBe('en');
+    expect(normalizeLanguage('pt')).toBe('PT');
+    expect(normalizeLanguage('missing')).toBe('EN');
+    expect(isLocaleSlug('en')).toBe(true);
+    expect(isLocaleSlug('de')).toBe(false);
+    expect(isLanguageCode('UA')).toBe(true);
+    expect(isLanguageCode('ua')).toBe(false);
+  });
 
-test('locale path utilities preserve localized route shape', () => {
-  assert.equal(getLocaleFromPathname('/ua/about'), 'ua');
-  assert.equal(getLocaleFromPathname('/about'), 'en');
-  assert.equal(getLanguageFromPathname('/pt/use-cases'), 'PT');
-  assert.equal(getLanguageFromPathname('/unknown'), 'EN');
-  assert.equal(stripLocaleFromPathname('/ua/about'), '/about');
-  assert.equal(stripLocaleFromPathname('/pt'), '/');
-  assert.equal(stripLocaleFromPathname('/use-cases'), '/use-cases');
-  assert.equal(withLocalePath('/about', 'ua'), '/ua/about');
-  assert.equal(withLocalePath('/en/about', 'pt'), '/pt/about');
-  assert.equal(withLocalePath('/', 'en'), '/en');
+  it('preserves localized route shape', () => {
+    expect(getLocaleFromPathname('/ua/about')).toBe('ua');
+    expect(getLocaleFromPathname('/about')).toBe('en');
+    expect(getLanguageFromPathname('/pt/use-cases')).toBe('PT');
+    expect(getLanguageFromPathname('/unknown')).toBe('EN');
+    expect(stripLocaleFromPathname('/ua/about')).toBe('/about');
+    expect(stripLocaleFromPathname('/pt')).toBe('/');
+    expect(stripLocaleFromPathname('/use-cases')).toBe('/use-cases');
+    expect(withLocalePath('/about', 'ua')).toBe('/ua/about');
+    expect(withLocalePath('/en/about', 'pt')).toBe('/pt/about');
+    expect(withLocalePath('/', 'en')).toBe('/en');
+  });
 });
