@@ -7,6 +7,9 @@ export const SUPPORTED_LANGUAGES = ['EN', 'UA', 'PT'] as const;
 export type LocaleSlug = (typeof SUPPORTED_LOCALES)[number];
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number];
 
+const SUPPORTED_LOCALE_VALUES: readonly string[] = SUPPORTED_LOCALES;
+const SUPPORTED_LANGUAGE_VALUES: readonly string[] = SUPPORTED_LANGUAGES;
+
 export const LOCALE_TO_LANGUAGE: Record<LocaleSlug, LanguageCode> = {
   en: 'EN',
   ua: 'UA',
@@ -26,13 +29,13 @@ export const LOCALE_HTML_LANG: Record<LocaleSlug, string> = {
 };
 
 export function isLocaleSlug(value: string | undefined): value is LocaleSlug {
-  return SUPPORTED_LOCALES.includes(value as LocaleSlug);
+  return value !== undefined && SUPPORTED_LOCALE_VALUES.includes(value);
 }
 
 export function isLanguageCode(
   value: string | undefined,
 ): value is LanguageCode {
-  return SUPPORTED_LANGUAGES.includes(value as LanguageCode);
+  return value !== undefined && SUPPORTED_LANGUAGE_VALUES.includes(value);
 }
 
 export function localeToLanguage(locale: LocaleSlug): LanguageCode {
