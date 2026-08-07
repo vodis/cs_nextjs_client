@@ -1,19 +1,24 @@
 import type { Metadata } from 'next';
 
+import { translate } from '@src/i18n/translate';
+import { defaultTranslations } from '@src/stores/reducers/i18n/default';
+import type { ITranslationItem } from '@src/types/entities/language';
 import {
   DEFAULT_LOCALE,
   LOCALE_HTML_LANG,
   SUPPORTED_LOCALES,
   type LocaleSlug,
+  localeToLanguage,
   withLocalePath,
 } from '@src/i18n/locales';
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://craftscript.com';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const LOCALIZED_ROUTE_PATHS = ['/', '/use-cases', '/ai', '/about'];
 
-const ROUTE_METADATA: Record<
+const ROUTE_METADATA_TRANSLATION_KEYS: Record<
   string,
   {
     title: string;
@@ -21,27 +26,20 @@ const ROUTE_METADATA: Record<
   }
 > = {
   '/': {
-    title:
-      'CraftScript | Easy discovering of Web3 world together | DeFi and Dex in your hands',
-    description:
-      'Our aim is creating smart scripts in any smart contract programming languages and reach to the best market results in a world. Join to Craft Script team and participate in development at open source solutions.',
+    title: 'Texts.metadata-home-title',
+    description: 'Texts.metadata-home-description',
   },
   '/about': {
-    title: 'About CraftScript | Pioneering Web3 Adoption and AI Innovation',
-    description:
-      "Learn about CraftScript's mission to drive widespread adoption of Web3 technologies across sectors. We seamlessly integrate Web3 innovations into business models, empowering clients to pioneer innovation and uphold digital privacy standards. As a digital engineering company, we craft cutting-edge solutions in symbiotic Web3 and AI ecosystems.",
+    title: 'Texts.metadata-about-title',
+    description: 'Texts.metadata-about-description',
   },
   '/ai': {
-    title:
-      'CraftScript | Revolutionizing Industries Through Human-AI Collaboration | AI Symbiosis',
-    description:
-      "Explore CraftScript's AI Symbiosis initiative, empowering sectors through human-AI collaboration. Our AI-powered solutions redefine content management, data analysis, trading strategies, market insights, and DeFi. Embrace efficiency, optimization, and innovation with CraftScript as we shape the future of technology together.",
+    title: 'Texts.metadata-ai-title',
+    description: 'Texts.metadata-ai-description',
   },
   '/use-cases': {
-    title:
-      'CraftScript | Exploring Use Cases in Web3, DeFi, Dex, and AI Projects',
-    description:
-      "Discover CraftScript's innovative projects in Web3, DeFi, Dex, and AI realms, including an end-to-end platform facilitating alternative asset investing, a decentralized insurance platform like BridgeMutual, and a DeFi platform enabling composable leverage and lending solutions. Explore the future of finance and technology with CraftScript.",
+    title: 'Texts.metadata-use-cases-title',
+    description: 'Texts.metadata-use-cases-description',
   },
 };
 
@@ -49,11 +47,11 @@ export function absoluteUrl(pathname: string): string {
   return new URL(pathname, SITE_URL).toString();
 }
 
-export function buildLocalizedMetadata(
+export async function buildLocalizedMetadata(
   pathname: string,
   locale: LocaleSlug = DEFAULT_LOCALE,
-): Metadata {
-  const routeMetadata = ROUTE_METADATA[pathname] ?? ROUTE_METADATA['/'];
+): Promise<Metadata> {
+  const routeMetadata = await getRouteMetadata(pathname, locale);
   const canonicalPath = withLocalePath(pathname, locale);
   const languages = SUPPORTED_LOCALES.reduce<Record<string, string>>(
     (result, supportedLocale) => {
@@ -79,4 +77,53 @@ export function buildLocalizedMetadata(
       url: absoluteUrl(canonicalPath),
     },
   };
+}
+
+async function getRouteMetadata(pathname: string, locale: LocaleSlug) {
+  const translationKeys =
+    ROUTE_METADATA_TRANSLATION_KEYS[pathname] ??
+    ROUTE_METADATA_TRANSLATION_KEYS['/'];
+  const translations = await getMetadataTranslations(locale);
+
+  return {
+    title: translate(
+      translations,
+      translationKeys.title,
+      translate(defaultTranslations, translationKeys.title),
+    ),
+    description: translate(
+      translations,
+      translationKeys.description,
+      translate(defaultTranslations, translationKeys.description),
+    ),
+  };
+}
+
+async function getMetadataTranslations(
+  locale: LocaleSlug,
+): Promise<ITranslationItem> {
+  if (!API_BASE_URL) {
+    return {};
+  }
+
+  try {
+    const response = await fetch(
+      new URL(`api/v1/translations/${localeToLanguage(locale)}`, API_BASE_URL),
+      {
+        next: {
+          revalidate: 3600,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return {};
+    }
+
+    const language = await response.json();
+
+    return language.translations ?? {};
+  } catch {
+    return {};
+  }
 }

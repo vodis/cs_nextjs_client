@@ -15,7 +15,9 @@ interface ILocalizedPageProps {
   };
 }
 
-export function generateMetadata({ params }: ILocalizedPageProps): Metadata {
+export function generateMetadata({
+  params,
+}: ILocalizedPageProps): Promise<Metadata> {
   return buildLocalizedMetadata(
     '/use-cases',
     isLocaleSlug(params.locale) ? params.locale : DEFAULT_LOCALE,
