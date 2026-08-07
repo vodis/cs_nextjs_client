@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
 import { NAVIGATIONS } from '@src/constants/navigations';
+import { stripLocaleFromPathname } from '@src/i18n/locales';
 
 import styles from './dynamic-bg.module.scss';
 
@@ -13,8 +14,9 @@ const DynamicBg: React.FC = () => {
   const pathname = usePathname();
 
   useEffect(() => {
+    const unlocalizedPathname = stripLocaleFromPathname(pathname);
     const findUrlByIndex = NAVIGATIONS.findIndex(
-      (link) => link.url === pathname,
+      (link) => link.url === unlocalizedPathname,
     );
     setBg(NAVIGATIONS[findUrlByIndex]?.bg);
     return () => {};

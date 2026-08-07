@@ -5,6 +5,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
 import Translate from '@src/components/Translate';
+import {
+  getLocaleFromPathname,
+  stripLocaleFromPathname,
+  withLocalePath,
+} from '@src/i18n/locales';
 
 import styles from './breadcrumbs.module.scss';
 import { IBreadcrumbs } from './types';
@@ -14,22 +19,24 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
   const [activeUrlName, setActiveUrlName] = useState<string>();
   const pathname = usePathname();
   const router = useRouter();
+  const locale = getLocaleFromPathname(pathname);
+  const unlocalizedPathname = stripLocaleFromPathname(pathname);
 
   const handleNavigate = (
     e: React.MouseEvent<HTMLButtonElement>,
     url: string,
   ) => {
     e.preventDefault();
-    router.push(url);
+    router.push(withLocalePath(url, locale));
   };
 
   useEffect(() => {
     const findUrlByIndex = props.navigations.findIndex(
-      (link) => link.url === pathname,
+      (link) => link.url === unlocalizedPathname,
     );
     setActiveUrlName(props.navigations[findUrlByIndex]?.name);
     return () => {};
-  }, [pathname, props.navigations]);
+  }, [props.navigations, unlocalizedPathname]);
 
   return (
     <div className="flex items-center justify-center w-full h-full relative">
@@ -51,7 +58,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
               className={clsx(
                 `${styles['breadcrumbs_btn']}`,
                 'items-center justify-center relative',
-                link.url === pathname && `${styles['active']}`,
+                link.url === unlocalizedPathname && `${styles['active']}`,
               )}
             >
               <span
@@ -59,7 +66,7 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
                   `${styles['breadcrumbs_btn__name']}`,
                   'uppercase text-base',
                   animate === index && `${styles['animate']}`,
-                  link.url === pathname && `${styles['active']}`,
+                  link.url === unlocalizedPathname && `${styles['active']}`,
                   'hidden md:block',
                 )}
               >
@@ -69,14 +76,14 @@ const Breadcrumbs: React.FC<IBreadcrumbs> = (props) => {
                 className={clsx(
                   `${styles['breadcrumbs_btn__line']}`,
                   animate === index && `${styles['animate']}`,
-                  link.url === pathname && `${styles['active']}`,
+                  link.url === unlocalizedPathname && `${styles['active']}`,
                   'hidden md:block',
                 )}
               ></div>
               <div
                 className={clsx(
                   `${styles['breadcrumbs_btn__pointer']}`,
-                  link.url === pathname && `${styles['active']}`,
+                  link.url === unlocalizedPathname && `${styles['active']}`,
                 )}
               ></div>
             </button>

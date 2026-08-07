@@ -8,6 +8,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import createStore, { queryClient } from '@src/stores/createStore';
 import LanguageProvider from '@src/providers/language/provider';
 
+import '@src/api/api';
+
 export const Store = createStore();
 export const QueryClient = queryClient();
 
