@@ -2,16 +2,21 @@
 
 import React, { useState } from 'react';
 import { clsx } from 'clsx';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import Translate from '@src/components/Translate';
 import { IMenu } from '@src/components/Menu/types';
 import CloseBtn from '@src/components/CloseBtn';
 import Languages from '@src/components/Languages';
+import { getLocaleFromPathname, withLocalePath } from '@src/i18n/locales';
 
 import styles from './menu.module.scss';
 
 const Menu: React.FC<IMenu> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname);
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
@@ -54,27 +59,36 @@ const Menu: React.FC<IMenu> = (props) => {
         )}
         <ul className="flex flex-col gap-4 md:gap-8">
           <li className="mr-6">
-            <a className="text-xl hover:text-orange uppercase" href="/">
+            <Link
+              className="text-xl hover:text-orange uppercase"
+              href={withLocalePath('/', locale)}
+            >
               <Translate translationKey="Texts.side-menu-home" />
-            </a>
+            </Link>
           </li>
           <li className="mr-6">
-            <a
+            <Link
               className="text-xl hover:text-orange uppercase"
-              href="/use-cases"
+              href={withLocalePath('/use-cases', locale)}
             >
               <Translate translationKey="Texts.side-menu-products" />
-            </a>
+            </Link>
           </li>
           <li className="mr-6">
-            <a className="text-xl hover:text-orange uppercase" href="/ai">
+            <Link
+              className="text-xl hover:text-orange uppercase"
+              href={withLocalePath('/ai', locale)}
+            >
               <Translate translationKey="Texts.side-menu-ai" />
-            </a>
+            </Link>
           </li>
           <li className="mr-6">
-            <a className="text-xl hover:text-orange uppercase" href="/about">
+            <Link
+              className="text-xl hover:text-orange uppercase"
+              href={withLocalePath('/about', locale)}
+            >
               <Translate translationKey="Texts.side-menu-about" />
-            </a>
+            </Link>
           </li>
           <li className="mr-6">
             <a
