@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import Translate from '@vodis/ui-kit/i18n/Translate';
 import clsx from 'clsx';
 
+import Translate from '@src/components/Translate';
 import CloseBtn from '@src/components/CloseBtn';
 import GetInTouchForm from '@src/components/MailBox/GetInTouchForm';
 

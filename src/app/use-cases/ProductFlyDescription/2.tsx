@@ -1,6 +1,6 @@
 import React from 'react';
-import { translate } from '@vodis/ui-kit/i18n/Translate';
 
+import { translate } from '@src/i18n/translate';
 import { useSelector } from '@src/stores/hooks';
 import AnimateText from '@src/components/AnimateText';
 import { useDedicatedWordIndexes } from '@src/hooks';
