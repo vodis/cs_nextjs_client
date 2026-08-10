@@ -1,7 +1,7 @@
 # Reusable GHCR build + deploy-metadata publish (orchestrator intake; no host deploy).
 #
 # Callers: build-staging.yml, build-prod.yml
-# @vodis/ui-kit: secret NPM_TOKEN (read:packages). Docker BuildKit secret — see Dockerfile.
+# @vodis/cs-foundation: secret GH_PACKAGES_TOKEN (read:packages). Docker BuildKit secret — see Dockerfile.
 
 name: Reusable build
 
@@ -37,7 +37,7 @@ on:
         required: true
         type: string
     secrets:
-      NPM_TOKEN:
+      GH_PACKAGES_TOKEN:
         required: true
 
 permissions:
@@ -77,14 +77,14 @@ jobs:
           node-version: '24'
           cache: pnpm
 
-      - name: npm auth (@vodis/ui-kit — GitHub Packages)
+      - name: npm auth (@vodis/cs-foundation — GitHub Packages)
         run: |
-          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit)."
+          if [ -z "${{ secrets.GH_PACKAGES_TOKEN }}" ]; then
+            echo "::error::Add repository secret GH_PACKAGES_TOKEN (GitHub PAT with read:packages, access to @vodis/cs-foundation)."
             exit 1
           fi
           echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
-          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.GH_PACKAGES_TOKEN }}" >> .npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -114,14 +114,14 @@ jobs:
           node-version: '24'
           cache: pnpm
 
-      - name: npm auth (@vodis/ui-kit — GitHub Packages)
+      - name: npm auth (@vodis/cs-foundation — GitHub Packages)
         run: |
-          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "::error::Add repository secret NPM_TOKEN (GitHub PAT with read:packages, access to @vodis/ui-kit)."
+          if [ -z "${{ secrets.GH_PACKAGES_TOKEN }}" ]; then
+            echo "::error::Add repository secret GH_PACKAGES_TOKEN (GitHub PAT with read:packages, access to @vodis/cs-foundation)."
             exit 1
           fi
           echo "@vodis:registry=https://npm.pkg.github.com/" >> .npmrc
-          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.NPM_TOKEN }}" >> .npmrc
+          printf '//npm.pkg.github.com/:_authToken=%s\n' "${{ secrets.GH_PACKAGES_TOKEN }}" >> .npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -150,7 +150,7 @@ jobs:
             ${{ env.GHCR_IMAGE }}:${{ inputs.image_tag }}
             ${{ env.GHCR_IMAGE }}:${{ github.sha }}
           secrets: |
-            npm_token=${{ secrets.NPM_TOKEN }}
+            npm_token=${{ secrets.GH_PACKAGES_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           provenance: true
           sbom: true

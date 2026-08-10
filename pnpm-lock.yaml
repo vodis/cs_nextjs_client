@@ -28,9 +28,6 @@ importers:
       '@vodis/cs-foundation':
         specifier: 0.2.1
         version: 0.2.1
-      '@vodis/ui-kit':
-        specifier: ^1.0.15
-        version: 1.0.15
       axios:
         specifier: ^1.16.1
         version: 1.16.1
@@ -2688,13 +2685,6 @@ packages:
       {
         integrity: sha512-JN0bAqONuuV6Xmca+as9TFSjWiW2uiyIBN6sicMbh02K84k+QrjIKBN/PAM/HUerZZPa7LiY4lDaJ1cc7gXtlQ==,
         tarball: https://npm.pkg.github.com/download/@vodis/cs-foundation/0.2.1/072fa085cdb207aca4796dd0988a447d9f518459,
-      }
-
-  '@vodis/ui-kit@1.0.15':
-    resolution:
-      {
-        integrity: sha512-LcT2lUkt8DRfhuQyY+g/PVS91YxSafkTSY6i8cC/vaUAewMxvJyupUg9fbjSar6U3Pq+sAb9YeCO36uXCIwX6g==,
-        tarball: https://npm.pkg.github.com/download/@vodis/ui-kit/1.0.15/65a5edc7677fd97204c1e499787bf0dd7062eea9,
       }
 
   acorn-jsx@5.3.2:
@@ -7995,8 +7985,6 @@ snapshots:
       tinyrainbow: 1.2.0
 
   '@vodis/cs-foundation@0.2.1': {}
-
-  '@vodis/ui-kit@1.0.15': {}
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
