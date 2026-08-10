@@ -2,8 +2,6 @@ import React, { PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
 
 import { isLocaleSlug, SUPPORTED_LOCALES } from '@src/i18n/locales';
-import { getServerI18nState } from '@src/i18n/server';
-import Providers from '@src/providers/providers';
 
 interface ILocaleLayoutProps extends PropsWithChildren {
   params: {
@@ -23,11 +21,7 @@ const LocaleLayout: React.FC<ILocaleLayoutProps> = async ({
     notFound();
   }
 
-  const preloadedState = {
-    i18n: await getServerI18nState(params.locale),
-  };
-
-  return <Providers preloadedState={preloadedState}>{children}</Providers>;
+  return <>{children}</>;
 };
 
 export default LocaleLayout;

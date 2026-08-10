@@ -1,8 +1,8 @@
-import { createServer } from 'node:http';
+import { describe, expect, it } from 'vitest';
+
 import { spawn } from 'node:child_process';
+import { createServer, type Server } from 'node:http';
 import { once } from 'node:events';
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
 
 const translatedValues = {
   UA: {
@@ -21,52 +21,66 @@ const translatedValues = {
   },
 };
 
-test('localized routes expose translated content in initial HTML', async () => {
-  const api = await startMockTranslationsApi();
-  const appPort = await getFreePort();
-  const env = {
-    ...process.env,
-    NEXT_PUBLIC_API_BASE_URL: api.url,
-    NEXT_PUBLIC_SITE_URL: `http://127.0.0.1:${appPort}`,
-  };
+describe('SSR localization', () => {
+  it('exposes translated content in localized route initial HTML', async () => {
+    const api = await startMockTranslationsApi();
+    const appPort = await getFreePort();
+    const env = {
+      ...process.env,
+      NEXT_PUBLIC_API_BASE_URL: api.url,
+      NEXT_PUBLIC_SITE_URL: `http://127.0.0.1:${appPort}`,
+    };
 
-  await runCommand('pnpm', ['exec', 'next', 'build'], env);
+    await runCommand('pnpm', ['exec', 'next', 'build'], env);
 
-  const app = spawn('pnpm', ['exec', 'next', 'start', '-p', String(appPort)], {
-    env,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
+    const app = spawn(
+      'pnpm',
+      ['exec', 'next', 'start', '-p', String(appPort)],
+      {
+        env,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    );
 
-  try {
-    await waitForHttp(`http://127.0.0.1:${appPort}/health`);
+    try {
+      await waitForHttp(`http://127.0.0.1:${appPort}/health`);
 
-    for (const expected of Object.values(translatedValues)) {
-      const html = await fetchText(
-        `http://127.0.0.1:${appPort}${expected.path}`,
-      );
+      for (const expected of Object.values(translatedValues)) {
+        const html = await fetchText(
+          `http://127.0.0.1:${appPort}${expected.path}`,
+        );
 
-      assert.match(html, new RegExp(`<html[^>]*lang="${expected.htmlLang}"`));
-      assert.match(html, new RegExp(expected.aboutTitle));
-      assert.match(html, new RegExp(expected.aboutParagraph));
-      assert.match(html, new RegExp(expected.menuHome));
-      assert.doesNotMatch(html, />\s*Texts\.[^<]*</);
+        expect(html).toMatch(
+          new RegExp(`<html[^>]*lang="${expected.htmlLang}"`),
+        );
+        expect(html).toMatch(new RegExp(expected.aboutTitle));
+        expect(html).toMatch(new RegExp(expected.aboutParagraph));
+        expect(html).toMatch(new RegExp(expected.menuHome));
+        expect(html).not.toMatch(/>\s*Texts\.[^<]*</);
+      }
+    } finally {
+      app.kill();
+      api.server.close();
     }
-  } finally {
-    app.kill();
-    api.server.close();
-  }
+  }, 90_000);
 });
 
-async function startMockTranslationsApi() {
+interface IMockTranslationsApi {
+  server: Server;
+  url: string;
+}
+
+async function startMockTranslationsApi(): Promise<IMockTranslationsApi> {
   const server = createServer((request, response) => {
     const language = request.url?.split('/').pop();
-    const values = language ? translatedValues[language] : undefined;
 
-    if (!values) {
+    if (!isTranslatedLanguage(language)) {
       response.writeHead(404);
       response.end();
       return;
     }
+
+    const values = translatedValues[language];
 
     response.writeHead(200, {
       'content-type': 'application/json',
@@ -98,7 +112,11 @@ async function startMockTranslationsApi() {
   await once(server, 'listening');
 
   const address = server.address();
-  assert(address && typeof address === 'object');
+  expect(address && typeof address === 'object').toBe(true);
+
+  if (!address || typeof address !== 'object') {
+    throw new Error('Mock translations API did not bind a TCP port');
+  }
 
   return {
     server,
@@ -106,13 +124,18 @@ async function startMockTranslationsApi() {
   };
 }
 
-async function getFreePort() {
+async function getFreePort(): Promise<number> {
   const server = createServer();
   server.listen(0, '127.0.0.1');
   await once(server, 'listening');
 
   const address = server.address();
-  assert(address && typeof address === 'object');
+  expect(address && typeof address === 'object').toBe(true);
+
+  if (!address || typeof address !== 'object') {
+    throw new Error('Temporary server did not bind a TCP port');
+  }
+
   const { port } = address;
 
   server.close();
@@ -121,7 +144,11 @@ async function getFreePort() {
   return port;
 }
 
-async function runCommand(command, args, env) {
+async function runCommand(
+  command: string,
+  args: string[],
+  env: NodeJS.ProcessEnv,
+): Promise<void> {
   const child = spawn(command, args, {
     env,
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -137,10 +164,10 @@ async function runCommand(command, args, env) {
 
   const [code] = await once(child, 'exit');
 
-  assert.equal(code, 0, output);
+  expect(code, output).toBe(0);
 }
 
-async function waitForHttp(url) {
+async function waitForHttp(url: string): Promise<void> {
   const deadline = Date.now() + 30_000;
 
   while (Date.now() < deadline) {
@@ -158,13 +185,19 @@ async function waitForHttp(url) {
   throw new Error(`Timed out waiting for ${url}`);
 }
 
-async function fetchText(url) {
+async function fetchText(url: string): Promise<string> {
   const response = await fetch(url);
-  assert.equal(response.status, 200);
+  expect(response.status).toBe(200);
 
   return response.text();
 }
 
-function delay(ms) {
+function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isTranslatedLanguage(
+  language: string | undefined,
+): language is keyof typeof translatedValues {
+  return language !== undefined && language in translatedValues;
 }

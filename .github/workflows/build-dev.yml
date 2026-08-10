@@ -71,8 +71,5 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: SSR localization test
-        run: pnpm run test:ssr-localization
-
       - name: Build
         run: pnpm run build
