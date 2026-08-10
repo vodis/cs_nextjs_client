@@ -4,21 +4,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
 import { ILanguage } from '@src/types/entities/language';
-import { defaultTranslations } from '@src/stores/reducers/i18n/default';
+import {
+  defaultLanguages,
+  defaultTranslations,
+} from '@src/stores/reducers/i18n/default';
+import { DEFAULT_LANGUAGE } from '@src/i18n/locales';
 
-interface II18nState extends ILanguage {
+export interface II18nState extends ILanguage {
   activeLanguage: string;
 }
 
 const initialState: II18nState = {
   translations: defaultTranslations,
-  languages: {
-    EN: {
-      language: 'English',
-      title: 'EN',
-    },
-  },
-  activeLanguage: Cookies.get('active-language') || 'EN',
+  languages: defaultLanguages,
+  activeLanguage: Cookies.get('active-language') || DEFAULT_LANGUAGE,
 };
 
 export const i18nSlice = createSlice({

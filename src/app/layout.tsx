@@ -16,6 +16,7 @@ import {
   LOCALE_HTML_LANG,
 } from '@src/i18n/locales';
 import { SITE_URL } from '@src/i18n/routes';
+import { getServerI18nState } from '@src/i18n/server';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import '@vodis/cs-foundation/styles/tokens.css';
@@ -57,9 +58,12 @@ const neueHaasGrot = localFont({
   ],
 });
 
-const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
+const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   const localeHeader = headers().get('x-cs-locale') ?? DEFAULT_LOCALE;
   const locale = isLocaleSlug(localeHeader) ? localeHeader : DEFAULT_LOCALE;
+  const preloadedState = {
+    i18n: await getServerI18nState(locale),
+  };
 
   return (
     <html lang={LOCALE_HTML_LANG[locale]}>
@@ -73,7 +77,7 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
       >
         <GoogleAnalytics />
         <main className="h-full flex flex-1 flex-col bg-black">
-          <Providers>
+          <Providers preloadedState={preloadedState}>
             <Header>
               <Menu />
             </Header>

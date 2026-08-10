@@ -13,7 +13,10 @@ export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
-const LocaleLayout: React.FC<ILocaleLayoutProps> = ({ children, params }) => {
+const LocaleLayout: React.FC<ILocaleLayoutProps> = async ({
+  children,
+  params,
+}) => {
   if (!isLocaleSlug(params.locale)) {
     notFound();
   }

@@ -1,6 +1,6 @@
 {
   "name": "craftscript",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,6 +12,7 @@
     "format:check": "prettier --check ./",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:ssr-localization": "vitest run src/i18n/ssr-localization.test.ts",
     "test:release-version": "node --test ci/check-version-bump.test.mjs",
     "check:release-version": "node ci/check-version-bump.mjs"
   },
