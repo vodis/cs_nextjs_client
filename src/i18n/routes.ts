@@ -2,15 +2,14 @@ import type { Metadata } from 'next';
 
 import { translate } from '@src/i18n/translate';
 import { defaultTranslations } from '@src/stores/reducers/i18n/default';
-import type { ITranslationItem } from '@src/types/entities/language';
 import {
   DEFAULT_LOCALE,
   LOCALE_HTML_LANG,
   SUPPORTED_LOCALES,
   type LocaleSlug,
-  localeToLanguage,
   withLocalePath,
 } from '@src/i18n/locales';
+import { getServerTranslations } from '@src/i18n/server';
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://craftscript.com';
@@ -83,7 +82,7 @@ async function getRouteMetadata(pathname: string, locale: LocaleSlug) {
   const translationKeys =
     ROUTE_METADATA_TRANSLATION_KEYS[pathname] ??
     ROUTE_METADATA_TRANSLATION_KEYS['/'];
-  const translations = await getMetadataTranslations(locale);
+  const translations = await getServerTranslations(locale);
 
   return {
     title: translate(
@@ -97,33 +96,4 @@ async function getRouteMetadata(pathname: string, locale: LocaleSlug) {
       translate(defaultTranslations, translationKeys.description),
     ),
   };
-}
-
-async function getMetadataTranslations(
-  locale: LocaleSlug,
-): Promise<ITranslationItem> {
-  if (!API_BASE_URL) {
-    return {};
-  }
-
-  try {
-    const response = await fetch(
-      new URL(`api/v1/translations/${localeToLanguage(locale)}`, API_BASE_URL),
-      {
-        next: {
-          revalidate: 3600,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      return {};
-    }
-
-    const language = await response.json();
-
-    return language.translations ?? {};
-  } catch {
-    return {};
-  }
 }
