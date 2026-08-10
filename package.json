@@ -12,6 +12,7 @@
     "format:check": "prettier --check ./",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:ssr-localization": "node --test ci/ssr-localization.test.mjs",
     "test:release-version": "node --test ci/check-version-bump.test.mjs",
     "check:release-version": "node ci/check-version-bump.mjs"
   },
