@@ -23,7 +23,6 @@
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
     "@vodis/cs-foundation": "0.2.1",
-    "@vodis/ui-kit": "^1.0.15",
     "axios": "^1.16.1",
     "clsx": "^2.1.1",
     "formik": "^2.4.9",

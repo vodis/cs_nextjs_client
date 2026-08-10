@@ -39,4 +39,4 @@ jobs:
       artifact_prefix: staging-deploy-bundle
       concurrency_group: staging-orchestrator
     secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
