@@ -37,6 +37,28 @@ describe('default translations', () => {
 
     expect(missingKeys).toEqual([]);
   });
+
+  it('reports mocked source keys missing from provided translations', () => {
+    const missingKeys = collectMissingTranslationKeys(
+      '/mock-src',
+      {
+        'Texts.side-menu-home': 'Home',
+      },
+      {
+        readDirectory: (directory) =>
+          directory === '/mock-src' ? ['page.tsx'] : [],
+        readFile: () =>
+          [
+            "translate(translations, 'Texts.side-menu-home')",
+            "translate(translations, 'Texts.content-about-title')",
+          ].join('\n'),
+        isDirectory: () => false,
+        joinPath: (...parts) => parts.join('/'),
+      },
+    );
+
+    expect(missingKeys).toEqual(['Texts.content-about-title']);
+  });
 });
 
 interface IFileSystemReader {
