@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, lazy } from 'react';
-import { translate } from '@vodis/ui-kit/i18n/Translate';
 
+import { translate } from '@src/i18n/translate';
 import { useSelector } from '@src/stores/hooks';
 import AnimateTitle from '@src/components/AnimateTitle';
 import ContentAI from '@src/app/ai/ContentAI';

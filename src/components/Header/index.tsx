@@ -1,14 +1,22 @@
+'use client';
+
 import React, { PropsWithChildren } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Translate from '@vodis/ui-kit/i18n/Translate';
+import { usePathname } from 'next/navigation';
+
+import Translate from '@src/components/Translate';
+import { getLocaleFromPathname, withLocalePath } from '@src/i18n/locales';
 
 export const Header: React.FC<PropsWithChildren> = ({ children }) => {
+  const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname);
+
   return (
     <header className="z-20 h-16">
       <div className="h-full grid grid-cols-4 mx-auto md:grid-cols-7">
         <div className="z-20 flex items-center justify-center">
-          <Link href="/">
+          <Link href={withLocalePath('/', locale)}>
             <Image src="/logo.svg" alt="logo" width={50} height={50} />
           </Link>
         </div>

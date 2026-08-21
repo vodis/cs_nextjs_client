@@ -10,7 +10,7 @@ export const useGetTranslationsAndLanguages = (
   options = {},
 ) =>
   useQuery({
-    queryKey: getLanguageKey,
+    queryKey: [...getLanguageKey, language],
     queryFn: () => getTranslationsAndLanguages(language),
     ...options,
   });

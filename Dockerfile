@@ -11,9 +11,9 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN --mount=type=secret,id=npm_token \
     sh -c 'set -e; \
-      NPM_TOKEN=$(tr -d "\n\r" </run/secrets/npm_token); \
-      [ -n "$NPM_TOKEN" ] || (echo "BuildKit secret npm_token is required for @vodis/ui-kit" >&2; exit 1); \
-      printf "%s\n" "@vodis:registry=https://npm.pkg.github.com/" "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" > .npmrc; \
+      PACKAGE_TOKEN=$(tr -d "\n\r" </run/secrets/npm_token); \
+      [ -n "$PACKAGE_TOKEN" ] || (echo "BuildKit secret npm_token is required for @vodis/cs-foundation" >&2; exit 1); \
+      printf "%s\n" "@vodis:registry=https://npm.pkg.github.com/" "//npm.pkg.github.com/:_authToken=${PACKAGE_TOKEN}" > .npmrc; \
       pnpm install --frozen-lockfile; \
       rm -f .npmrc'
 

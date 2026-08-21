@@ -1,7 +1,7 @@
-'use client';
-
 import React, { PropsWithChildren } from 'react';
 import { clsx } from 'clsx';
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import localFont from 'next/font/local';
 
 import Providers from '@src/providers/providers';
@@ -10,11 +10,21 @@ import { Header } from '@src/components/Header';
 import { Footer } from '@src/components/Footer';
 import Menu from '@src/components/Menu';
 import DynamicBg from '@src/components/DynamicBg';
+import {
+  DEFAULT_LOCALE,
+  isLocaleSlug,
+  LOCALE_HTML_LANG,
+} from '@src/i18n/locales';
+import { SITE_URL } from '@src/i18n/routes';
+import { getServerI18nState } from '@src/i18n/server';
 
 import 'react-toastify/dist/ReactToastify.min.css';
+import '@vodis/cs-foundation/styles/tokens.css';
 import './globals.css';
 
-import '@src/api/api';
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+};
 
 const aeonikFono = localFont({
   variable: '--font-aeonik-fono',
@@ -48,9 +58,15 @@ const neueHaasGrot = localFont({
   ],
 });
 
-const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
+const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
+  const localeHeader = headers().get('x-cs-locale') ?? DEFAULT_LOCALE;
+  const locale = isLocaleSlug(localeHeader) ? localeHeader : DEFAULT_LOCALE;
+  const preloadedState = {
+    i18n: await getServerI18nState(locale),
+  };
+
   return (
-    <html lang="en">
+    <html lang={LOCALE_HTML_LANG[locale]}>
       <body
         className={clsx(
           aeonikFono.variable,
@@ -61,7 +77,7 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
       >
         <GoogleAnalytics />
         <main className="h-full flex flex-1 flex-col bg-black">
-          <Providers>
+          <Providers preloadedState={preloadedState}>
             <Header>
               <Menu />
             </Header>
