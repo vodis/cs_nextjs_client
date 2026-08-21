@@ -21,9 +21,12 @@ const AboutPage: React.FC = () => {
     {
       fullName: 'Mariia Voitenko',
       position: ['Junior AI & Frontend Developer'],
+      in: 'https://www.linkedin.com/in/mariia-voitenko-658bb3288',
       avatar: '/images/about/1c7cd888.jpg',
     },
   ];
+
+  const aboutLabel = translate(translations, 'Texts.animate-label-about');
 
   return (
     <div className="h-full grid grid-cols-4 mx-auto md:grid-cols-7">
@@ -33,22 +36,23 @@ const AboutPage: React.FC = () => {
         </div>
       </div>
       <section className="flex items-start justify-center flex-col gap-10 col-start-2 col-end-5 md:col-start-3 md:col-end-6">
-        <AnimateTitle
-          title={translate(translations, 'Texts.animate-label-about')}
-        />
         <div className="lg:hidden w-full flex flex-col gap-10">
           {team.map((member) => (
-            <LeaderCard key={member.fullName} {...member} isMobile={true} />
+            <div key={member.fullName} className="flex flex-col gap-10">
+              <AnimateTitle title={aboutLabel} />
+              <LeaderCard {...member} isMobile={true} />
+            </div>
           ))}
         </div>
         <div className="hidden w-full lg:grid grid-cols-3 items-start">
           {team.map((member, index) => (
             <div
               key={member.fullName}
-              className={
-                index === 1 ? 'col-start-3 mt-[calc(120%+4.5rem)]' : undefined
-              }
+              className={`flex flex-col gap-10 ${
+                index === 1 ? 'col-start-3 row-start-2' : ''
+              }`}
             >
+              <AnimateTitle title={aboutLabel} />
               <LeaderCard {...member} />
             </div>
           ))}
