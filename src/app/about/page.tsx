@@ -14,9 +14,14 @@ const AboutPage: React.FC = () => {
   const team = [
     {
       fullName: 'Dmytro Voitenko',
-      position: ['Founder', 'Senior Full Stack Developer'],
+      position: ['Founder & Senior Full Stack Engineer'],
       in: 'https://www.linkedin.com/in/dmytro-voitenko-82871a145/',
-      avatar: '/images/about/leader_1.png',
+      avatar: '/images/about/1c7cd944.jpg',
+    },
+    {
+      fullName: 'Mariia Voitenko',
+      position: ['Junior AI & Frontend Developer'],
+      avatar: '/images/about/1c7cd888.jpg',
     },
   ];
 
@@ -31,11 +36,22 @@ const AboutPage: React.FC = () => {
         <AnimateTitle
           title={translate(translations, 'Texts.animate-label-about')}
         />
-        <div className="lg:hidden w-full">
-          <LeaderCard {...team[0]} isMobile={true} />
+        <div className="lg:hidden w-full flex flex-col gap-10">
+          {team.map((member) => (
+            <LeaderCard key={member.fullName} {...member} isMobile={true} />
+          ))}
         </div>
-        <div className="hidden w-full lg:grid grid-cols-2 md:grid-cols-3 grid-flow-col">
-          <LeaderCard {...team[0]} />
+        <div className="hidden w-full lg:grid grid-cols-3 items-start">
+          {team.map((member, index) => (
+            <div
+              key={member.fullName}
+              className={
+                index === 1 ? 'col-start-3 mt-[calc(120%+4.5rem)]' : undefined
+              }
+            >
+              <LeaderCard {...member} />
+            </div>
+          ))}
         </div>
       </section>
     </div>
