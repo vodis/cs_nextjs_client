@@ -11,7 +11,13 @@ const LeaderCard: React.FC<ILeaderCard> = (props) => {
     <div className="flex flex-col relative">
       {props.in ? (
         <div className="absolute h-14 w-14 -left-10 top-0">
-          <a href={props.in} className="mx-2" target="_blank" rel="noreferrer">
+          <a
+            href={props.in}
+            aria-label={`${props.fullName} LinkedIn profile`}
+            className="mx-2"
+            target="_blank"
+            rel="noreferrer"
+          >
             <span className="text-orange text-2xl md:text-lg">in</span>
           </a>
         </div>
