@@ -14,11 +14,19 @@ const AboutPage: React.FC = () => {
   const team = [
     {
       fullName: 'Dmytro Voitenko',
-      position: ['Founder', 'Senior Full Stack Developer'],
+      position: ['Founder & Senior Full Stack Engineer'],
       in: 'https://www.linkedin.com/in/dmytro-voitenko-82871a145/',
-      avatar: '/images/about/leader_1.png',
+      avatar: '/images/about/1c7cd944.jpg',
+    },
+    {
+      fullName: 'Mariia Voitenko',
+      position: ['Junior AI & Frontend Developer'],
+      in: 'https://www.linkedin.com/in/mariia-voitenko-658bb3288',
+      avatar: '/images/about/1c7cd888.jpg',
     },
   ];
+
+  const aboutLabel = translate(translations, 'Texts.animate-label-about');
 
   return (
     <div className="h-full grid grid-cols-4 mx-auto md:grid-cols-7">
@@ -28,14 +36,26 @@ const AboutPage: React.FC = () => {
         </div>
       </div>
       <section className="flex items-start justify-center flex-col gap-10 col-start-2 col-end-5 md:col-start-3 md:col-end-6">
-        <AnimateTitle
-          title={translate(translations, 'Texts.animate-label-about')}
-        />
-        <div className="lg:hidden w-full">
-          <LeaderCard {...team[0]} isMobile={true} />
+        <div className="lg:hidden w-full flex flex-col gap-10">
+          {team.map((member) => (
+            <div key={member.fullName} className="flex flex-col gap-10">
+              <AnimateTitle title={aboutLabel} />
+              <LeaderCard {...member} isMobile={true} />
+            </div>
+          ))}
         </div>
-        <div className="hidden w-full lg:grid grid-cols-2 md:grid-cols-3 grid-flow-col">
-          <LeaderCard {...team[0]} />
+        <div className="hidden w-full lg:grid grid-cols-3 items-start">
+          {team.map((member, index) => (
+            <div
+              key={member.fullName}
+              className={`flex flex-col gap-10 ${
+                index === 1 ? 'col-start-3 row-start-2' : ''
+              }`}
+            >
+              <AnimateTitle title={aboutLabel} />
+              <LeaderCard {...member} />
+            </div>
+          ))}
         </div>
       </section>
     </div>
