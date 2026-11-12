@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { MenuButton } from '@vodis/cs-ui/react';
+import '@vodis/cs-ui/styles/menu-button.css';
 
 import Translate from '@src/components/Translate';
 import { IMenu } from '@src/components/Menu/types';
@@ -13,7 +15,7 @@ import { getLocaleFromPathname, withLocalePath } from '@src/i18n/locales';
 
 import styles from './menu.module.scss';
 
-const Menu: React.FC<IMenu> = (props) => {
+const Menu: React.FC<IMenu> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const locale = getLocaleFromPathname(pathname);
@@ -24,25 +26,7 @@ const Menu: React.FC<IMenu> = (props) => {
 
   return (
     <div className={`${styles['menu']}`}>
-      <div className={`${styles['menu-btn']}`} onClick={handleOpen}>
-        <div
-          className={clsx(
-            'w-14',
-            `${styles['menu-ico']}`,
-            isOpen && `${styles['open']}`,
-          )}
-        >
-          <div
-            className={`w-full h-0.5 bg-orange ${styles['menu-ico_line__first']}`}
-          ></div>
-          <div
-            className={`w-full h-0.5 bg-orange mt-2 ${styles['menu-ico_line__middle']}`}
-          ></div>
-          <div
-            className={`w-full h-0.5 bg-orange mt-2 ${styles['menu-ico_line__last']}`}
-          ></div>
-        </div>
-      </div>
+      <MenuButton open={isOpen} onPressed={handleOpen} />
       <div
         className={clsx(
           'fixed flex flex-col justify-between top-0 right-0 w-full pt-24 pb-10 px-6 md:py-28 md:px-16 md:w-4/6 lg:w-3/6 xl:w-2/6 h-full z-10 bg-gradient-to-r from-gray-30 to-white overflow-y-auto',
