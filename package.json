@@ -41,7 +41,7 @@
     "swiper": "^11.2.10",
     "typescript": "^5.9.3",
     "yup": "^1.7.1",
-    "@vodis/cs-ui": "file:../cs-sdk/packages/cs-ui"
+    "@vodis/cs-ui": "0.2.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.5.11",
